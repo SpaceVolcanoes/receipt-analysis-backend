@@ -15,15 +15,17 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql:42.2.16'
 
 	compile 'io.springfox:springfox-boot-starter:3.0.0'
 
-	testImplementation "org.assertj:assertj-core:3.11.1"
-	testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.0"
-	testImplementation "org.junit.jupiter:junit-jupiter-params:5.6.0"
-	testImplementation "org.mockito:mockito-inline:3.3.3"
-	testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.0"
+	testImplementation 'org.assertj:assertj-core:3.11.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.0'
+	testImplementation 'org.mockito:mockito-inline:3.3.3'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

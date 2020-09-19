@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    container_name: "analysis-db"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_DB=analysis
+    volumes:
+      - analysis-db-data:/var/lib/postgresql/data
+
+volumes:
+  analysis-db-data:
