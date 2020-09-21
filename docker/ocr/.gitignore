@@ -1,3 +1,3 @@
-detected.jpg
-threshold.jpg
-extracted.txt
+*.txt
+*-threshold.jpg
+*-detected.jpg
