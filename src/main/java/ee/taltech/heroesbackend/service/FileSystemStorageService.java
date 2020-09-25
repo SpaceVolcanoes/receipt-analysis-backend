@@ -1,6 +1,5 @@
 package ee.taltech.heroesbackend.service;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -105,4 +104,5 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Could not initialize storage", e);
         }
     }
+
 }
