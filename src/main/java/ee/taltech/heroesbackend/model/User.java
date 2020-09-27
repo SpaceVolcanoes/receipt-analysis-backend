@@ -14,7 +14,7 @@ public class User {
     private String modificationDate;
 
     public User() {
-        
+
     }
 
     @Id
