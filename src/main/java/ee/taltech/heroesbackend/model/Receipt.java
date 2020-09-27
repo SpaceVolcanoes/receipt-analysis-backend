@@ -1,14 +1,16 @@
 package ee.taltech.heroesbackend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Receipt {
 
-
+    @Id
+    @GeneratedValue
     private Long id;
-    private long userId;
+    private Long userId;
     private String modificationDate;
     private String creationData;
     private String issuer;
@@ -17,11 +19,11 @@ public class Receipt {
 
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public Receipt setUserId(long userId) {
+    public Receipt setUserId(Long userId) {
         this.userId = userId;
         return this;
     }
@@ -58,7 +60,6 @@ public class Receipt {
         return this;
     }
 
-    @Id
     public Long getId() {
         return id;
     }

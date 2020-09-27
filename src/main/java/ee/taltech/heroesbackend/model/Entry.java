@@ -1,28 +1,30 @@
 package ee.taltech.heroesbackend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Entry {
 
-    private long id;
+    @Id
+    @GeneratedValue
+    private Long id;
     private String name;
-    private long cost;
-    private long receiptId;
+    private Long cost;
+    private Long receiptId;
     private String category;
-    private long quantity;
+    private Long quantity;
 
     public Entry() {
         
     }
 
-    @Id
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public Entry setId(long id) {
+    public Entry setId(Long id) {
         this.id = id;
         return this;
     }
@@ -36,20 +38,20 @@ public class Entry {
         return this;
     }
 
-    public long getCost() {
+    public Long getCost() {
         return cost;
     }
 
-    public Entry setCost(long cost) {
+    public Entry setCost(Long cost) {
         this.cost = cost;
         return this;
     }
 
-    public long getReceiptId() {
+    public Long getReceiptId() {
         return receiptId;
     }
 
-    public Entry setReceiptId(long receiptId) {
+    public Entry setReceiptId(Long receiptId) {
         this.receiptId = receiptId;
         return this;
     }
@@ -63,11 +65,11 @@ public class Entry {
         return this;
     }
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public Entry setQuantity(long quantity) {
+    public Entry setQuantity(Long quantity) {
         this.quantity = quantity;
         return this;
     }
