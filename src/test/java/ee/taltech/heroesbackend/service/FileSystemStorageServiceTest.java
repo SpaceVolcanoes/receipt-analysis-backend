@@ -2,16 +2,14 @@ package ee.taltech.heroesbackend.service;
 
 import ee.taltech.heroesbackend.configuration.StorageProperties;
 import ee.taltech.heroesbackend.exception.StorageException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FileSystemStorageServiceTest {
 
@@ -20,12 +18,17 @@ class FileSystemStorageServiceTest {
 
     @BeforeEach
     public void init() {
-        properties.setLocation("target/files/" + Math.abs(new Random().nextLong()));
+        properties.setLocation("target/files");
         service = new FileSystemStorageService(properties);
         service.init();
     }
 
-    @Test
+	@AfterEach
+	public void afterAll() {
+		service.deleteAll();
+	}
+
+	@Test
 	public void loadNonExistent() {
 		assertThat(service.load("foo.txt")).doesNotExist();
 	}
