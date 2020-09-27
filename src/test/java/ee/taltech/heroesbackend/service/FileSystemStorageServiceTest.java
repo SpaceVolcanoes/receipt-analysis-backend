@@ -23,32 +23,32 @@ class FileSystemStorageServiceTest {
         service.init();
     }
 
-	@AfterEach
-	public void afterAll() {
-		service.deleteAll();
-	}
+    @AfterEach
+    public void afterAll() {
+        service.deleteAll();
+    }
 
-	@Test
-	public void loadNonExistent() {
-		assertThat(service.load("foo.txt")).doesNotExist();
-	}
+    @Test
+    public void loadNonExistent() {
+        assertThat(service.load("foo.txt")).doesNotExist();
+    }
 
-	@Test
-	public void saveAndLoad() {
-		service.store(new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
-				"Hello, World".getBytes()));
-		assertThat(service.load("foo.txt")).exists();
-	}
+    @Test
+    public void saveAndLoad() {
+        service.store(new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
+            "Hello, World".getBytes()));
+        assertThat(service.load("foo.txt")).exists();
+    }
 
-	@Test
-	public void saveNotPermitted() {
-		assertThrows(StorageException.class, () -> service.store(new MockMultipartFile("foo", "../foo.txt",
-		MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes())));
-	}
+    @Test
+    public void saveNotPermitted() {
+        assertThrows(StorageException.class, () -> service.store(new MockMultipartFile("foo", "../foo.txt",
+            MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes())));
+    }
 
-	@Test
-	public void savePermitted() {
-		service.store(new MockMultipartFile("foo", "bar/../foo.txt",
-				MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
-	}
+    @Test
+    public void savePermitted() {
+        service.store(new MockMultipartFile("foo", "bar/../foo.txt",
+            MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+    }
 }
