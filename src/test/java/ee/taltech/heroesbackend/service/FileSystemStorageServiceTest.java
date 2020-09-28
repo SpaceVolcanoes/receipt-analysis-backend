@@ -9,11 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 class FileSystemStorageServiceTest {
 
-    private StorageProperties properties = new StorageProperties();
+    private final StorageProperties properties = new StorageProperties();
     private FileSystemStorageService service;
 
     @BeforeEach
@@ -35,20 +35,39 @@ class FileSystemStorageServiceTest {
 
     @Test
     public void saveAndLoad() {
-        service.store(new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
-            "Hello, World".getBytes()));
+        service.store(new MockMultipartFile(
+            "foo",
+            "foo.txt",
+            MediaType.TEXT_PLAIN_VALUE,
+            "Hello, World".getBytes()
+        ));
         assertThat(service.load("foo.txt")).exists();
     }
 
     @Test
     public void saveNotPermitted() {
-        assertThrows(StorageException.class, () -> service.store(new MockMultipartFile("foo", "../foo.txt",
-            MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes())));
+        Throwable thrown = catchThrowable(() -> {
+            service.store(new MockMultipartFile(
+                "foo",
+                "../foo.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World".getBytes()
+            ));
+        });
+
+        assertThat(thrown)
+            .isInstanceOf(StorageException.class)
+            .hasMessage("Cannot store file with relative path outside current directory ../foo.txt");
     }
 
     @Test
     public void savePermitted() {
-        service.store(new MockMultipartFile("foo", "bar/../foo.txt",
-            MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+        service.store(new MockMultipartFile(
+            "foo",
+            "bar/../foo.txt",
+            MediaType.TEXT_PLAIN_VALUE,
+            "Hello, World".getBytes()
+        ));
     }
+
 }
