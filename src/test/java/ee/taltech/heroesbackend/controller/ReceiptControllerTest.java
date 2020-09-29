@@ -56,4 +56,25 @@ class ReceiptControllerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(415);
     }
 
+    @Test
+    void getReceiptReturnsReceiptFromServiceIfFound() {
+        Receipt receipt = new Receipt();
+
+        when(service.findById(3L)).thenReturn(receipt);
+
+        ResponseEntity<?> response = controller.getReceipt(3L);
+
+        assertThat(response.getBody()).isSameAs(receipt);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    void getReceiptReturnsNotFoundIfServiceThrowsIllegal() {
+        when(service.findById(3L)).thenThrow(IllegalArgumentException.class);
+
+        ResponseEntity<?> response = controller.getReceipt(3L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
+    }
+
 }

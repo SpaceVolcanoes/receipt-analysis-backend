@@ -22,4 +22,8 @@ public class ReceiptService {
         return repository.save(new Receipt().setFileName(name));
     }
 
+    public Receipt findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No Receipt with ID " + id));
+    }
+
 }

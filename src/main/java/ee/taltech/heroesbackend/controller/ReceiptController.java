@@ -1,6 +1,7 @@
 package ee.taltech.heroesbackend.controller;
 
 import ee.taltech.heroesbackend.exception.StorageException;
+import ee.taltech.heroesbackend.model.Receipt;
 import ee.taltech.heroesbackend.service.ReceiptService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -59,6 +62,26 @@ public class ReceiptController {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).header("Retry-After", "10").build();
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+        }
+    }
+
+    @GetMapping("{id}")
+    @ApiResponses({
+        @ApiResponse(
+            code = HttpServletResponse.SC_OK,
+            message = "Receipt found"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_NOT_FOUND,
+            message = "No Receipt exist for a given ID"
+        ),
+    })
+    public ResponseEntity<?> getReceipt(@PathVariable Long id) {
+        try {
+            Receipt receipt = service.findById(id);
+            return new ResponseEntity<>(receipt, HttpStatus.OK);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.notFound().build();
         }
     }
 

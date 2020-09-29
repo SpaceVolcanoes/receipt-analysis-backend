@@ -27,9 +27,9 @@ public class ApplicationInit implements CommandLineRunner {
         Receipt maxima = receiptRepository.save(new Receipt().setUserId(krissu.getId()).setIssuer("Maxima"));
 
         entryRepository.saveAll(asList(
-            new Entry().setName("Piim").setCost(2L).setReceiptId(maxima.getId()),
-            new Entry().setName("Juust").setCost(3L).setReceiptId(maxima.getId()),
-            new Entry().setName("Rõba").setCost(4L).setReceiptId(maxima.getId())
+            new Entry().setName("Piim").setCost(2.0).setReceipt(maxima),
+            new Entry().setName("Juust").setCost(3.0).setReceipt(maxima),
+            new Entry().setName("Rõba").setCost(4.0).setReceipt(maxima)
         ));
     }
 
