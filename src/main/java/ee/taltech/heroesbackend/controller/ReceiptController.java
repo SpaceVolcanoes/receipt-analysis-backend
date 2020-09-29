@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,6 +84,26 @@ public class ReceiptController {
             return new ResponseEntity<>(receipt, HttpStatus.OK);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("{id}")
+    @ApiResponses({
+        @ApiResponse(
+            code = HttpServletResponse.SC_OK,
+            message = "Receipt updated"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_BAD_REQUEST,
+            message = "Your input data was invalid, please check and try again"
+        ),
+    })
+    public ResponseEntity<?> updateReceipt(@RequestBody Receipt receipt, @PathVariable Long id) {
+        try {
+            Receipt updated = service.update(receipt, id);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
 

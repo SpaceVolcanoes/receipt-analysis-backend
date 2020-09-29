@@ -77,4 +77,27 @@ class ReceiptControllerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
     }
 
+    @Test
+    void updateReceiptReturnsReceiptIfSuccess() {
+        Receipt receipt = new Receipt();
+
+        when(service.update(receipt, 3L)).thenReturn(receipt);
+
+        ResponseEntity<?> response = controller.updateReceipt(receipt, 3L);
+
+        assertThat(response.getBody()).isSameAs(receipt);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    void updateReceiptReturnsBadRequestIfError() {
+        Receipt receipt = new Receipt();
+
+        when(service.update(receipt, 3L)).thenThrow(IllegalArgumentException.class);
+
+        ResponseEntity<?> response = controller.updateReceipt(receipt, 3L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(400);
+    }
+
 }
