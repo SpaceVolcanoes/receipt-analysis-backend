@@ -1,15 +1,5 @@
 package ee.taltech.heroesbackend.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
-
 import ee.taltech.heroesbackend.configuration.StorageProperties;
 import ee.taltech.heroesbackend.exception.StorageException;
 import ee.taltech.heroesbackend.exception.StorageFileNotFoundException;
@@ -21,6 +11,18 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
+
 @Service
 public class FileSystemStorageService implements StorageService {
 
@@ -31,8 +33,20 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
+    public boolean isImage(MultipartFile file) {
+        try {
+            ImageIO.read(new ByteArrayInputStream(file.getBytes())).toString();
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
     @Override
-    public void store(MultipartFile file) {
+    public String store(MultipartFile file) throws StorageException {
+        if (file.getOriginalFilename() == null) {
+            throw new StorageException("File is missing a name");
+        }
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
@@ -45,6 +59,7 @@ public class FileSystemStorageService implements StorageService {
             }
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+                return filename;
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
