@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
 
 class ReceiptSummaryTest {
 
@@ -34,7 +35,7 @@ class ReceiptSummaryTest {
             new Entry().setName("Kana").setCost(3.35).setReceipt(receipt2)
         );
 
-	receipt1 = new Receipt().setCustomer(new Customer()).setEntries(entries1);
+	    receipt1 = new Receipt().setCustomer(new Customer()).setEntries(entries1);
         receipt2 = new Receipt().setCustomer(new Customer()).setEntries(entries2);
 
         receiptSummary1 = new ReceiptSummary(receipt1);
@@ -43,16 +44,17 @@ class ReceiptSummaryTest {
 
     @Test
     void testNumberOfEntries() {
-        assertEquals(5, receiptSummary1.getNumberOfEntries());
-        assertEquals(3, receiptSummary2.getNumberOfEntries());
+        assertThat(receiptSummary1.getNumberOfEntries()).isEqualTo(5);
+        assertThat(receiptSummary2.getNumberOfEntries()).isEqualTo(3);
     }
 
     @Test
     void testTotalCostOfEntries() {
         double totalCost1 = receiptSummary1.getTotalCostOfEntries();
-        assertEquals(27.99, totalCost1, 0.001);
+        assertThat(totalCost1).isEqualTo(27.99, offset(0.001));
 
         double totalCost2 = receiptSummary2.getTotalCostOfEntries();
-        assertEquals(7.33, totalCost2, 0.001 );
+        assertThat(totalCost2).isEqualTo(7.33, offset(0.001));
     }
+
 }
