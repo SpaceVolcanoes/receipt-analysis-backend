@@ -1,5 +1,6 @@
 package ee.taltech.receipt.service;
 
+import ee.taltech.receipt.model.Customer;
 import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.ReceiptRepository;
@@ -95,7 +96,7 @@ class ReceiptServiceTest {
     void updateSetsNewValuesOnReceipt() {
         Receipt old = new Receipt().setId(1L)
             .setFileName("temp.png")
-            .setUserId(5L)
+            .setCustomer(new Customer().setId(5L))
             .setIssuer("Maxima")
             .setModifiedAt(Timestamp.valueOf("2020-09-13 11:00:00"))
             .setCreatedAt(Timestamp.valueOf("2020-09-13 11:00:00"))
@@ -106,7 +107,7 @@ class ReceiptServiceTest {
 
         Receipt updated = new Receipt().setId(3L)
             .setFileName("moo.png")
-            .setUserId(8L)
+            .setCustomer(new Customer().setId(8L))
             .setIssuer("Krauta")
             .setEntries(emptyList())
             .setModifiedAt(Timestamp.valueOf("2020-09-15 11:00:00"))
@@ -118,7 +119,7 @@ class ReceiptServiceTest {
         assertThat(actual).isSameAs(old);
         assertThat(actual.getId()).isEqualTo(1L);
         assertThat(actual.getFileName()).isEqualTo("temp.png");
-        assertThat(actual.getUserId()).isEqualTo(5L);
+        assertThat(actual.getCustomer().getId()).isEqualTo(5L);
         assertThat(actual.getIssuer()).isEqualTo("Krauta");
         assertThat(actual.getCreatedAt()).isEqualTo(Timestamp.valueOf("2020-09-13 11:00:00"));
         assertThat(actual.getIssuedAt()).isEqualTo(Timestamp.valueOf("2020-09-15 11:00:00"));

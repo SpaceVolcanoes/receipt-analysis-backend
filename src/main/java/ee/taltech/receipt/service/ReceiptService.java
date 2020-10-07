@@ -1,6 +1,8 @@
 package ee.taltech.receipt.service;
 
+import ee.taltech.receipt.dto.ReceiptSummary;
 import ee.taltech.receipt.model.Receipt;
+import ee.taltech.receipt.repository.CustomerRepository;
 import ee.taltech.receipt.repository.ReceiptRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -16,6 +21,7 @@ public class ReceiptService {
 
     private final FileSystemStorageService fileService;
     private final EntryService entryService;
+    private final CustomerService customerService;
     private final ReceiptRepository repository;
 
     public Receipt create(MultipartFile file) {
@@ -51,4 +57,7 @@ public class ReceiptService {
         return repository.save(old);
     }
 
+    public List<Receipt> getAllCustomerReceipts(Long customerId) {
+        return customerService.findById(customerId).getReceipts();
+    }
 }
