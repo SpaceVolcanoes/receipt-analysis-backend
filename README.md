@@ -9,7 +9,7 @@
 ## Running the service locally
 
 - Start the database with `docker-compose up -d` (safe to run even if the db is already up)
-- Run the application via `HeroesBackendApplication.main` 
+- Run the application via `Application.main` 
 
 ## Swagger
 
