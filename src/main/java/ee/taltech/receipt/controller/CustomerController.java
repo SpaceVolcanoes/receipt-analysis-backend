@@ -44,9 +44,11 @@ public class CustomerController {
                 .stream()
                 .map(ReceiptSummary::new)
                 .collect(Collectors.toList());
+
             return new ResponseEntity<>(receipts, responseHeaders, HttpStatus.OK);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.notFound().build();
         }
     }
+
 }
