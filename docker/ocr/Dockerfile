@@ -1,6 +1,6 @@
 FROM ubuntu
 
-COPY . /tmp
+COPY . /home
 
 RUN apt-get update && apt-get install -y software-properties-common tesseract-ocr
 
@@ -16,9 +16,12 @@ RUN pip3 install pytesseract
 RUN pip3 install opencv-python-headless
 RUN pip3 install opencv-contrib-python-headless
 RUN pip3 install matplotlib
+RUN pip3 install flask
 
 RUN apt-get install -y tesseract-ocr-est tesseract-ocr-deu
 
 WORKDIR /home
 
-CMD ["bash"]
+ENTRYPOINT python3 api.py
+
+EXPOSE 5000
