@@ -29,6 +29,10 @@ public class ReceiptService {
         return repository.save(new Receipt().setFileName(name));
     }
 
+    public void delete(Receipt receipt) {
+        repository.delete(receipt);
+    }
+
     public Receipt findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No Receipt with ID " + id));
     }
