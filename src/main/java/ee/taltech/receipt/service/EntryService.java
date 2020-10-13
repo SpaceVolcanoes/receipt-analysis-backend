@@ -25,6 +25,10 @@ public class EntryService {
         return repository.save(entry);
     }
 
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
     public Entry findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No Entry with ID " + id));
     }
