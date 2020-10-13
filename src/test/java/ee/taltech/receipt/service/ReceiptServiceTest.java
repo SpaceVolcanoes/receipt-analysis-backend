@@ -1,13 +1,11 @@
 package ee.taltech.receipt.service;
 
 import ee.taltech.receipt.model.Customer;
-import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.ReceiptRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,12 +16,10 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,9 +34,6 @@ class ReceiptServiceTest {
 
     @Mock
     private ReceiptRepository repository;
-
-    @Mock
-    private EntryService entryService;
 
     @InjectMocks
     private ReceiptService service;
@@ -124,28 +117,6 @@ class ReceiptServiceTest {
         assertThat(actual.getCreatedAt()).isEqualTo(Timestamp.valueOf("2020-09-13 11:00:00"));
         assertThat(actual.getIssuedAt()).isEqualTo(Timestamp.valueOf("2020-09-15 11:00:00"));
         assertThat(actual.getModifiedAt()).isAfter(Date.from(Instant.parse("2020-09-19T11:00:00.000Z")));
-    }
-
-    @Test
-    void updateAddsAndUpdatesChildEntries() {
-        Receipt old = new Receipt();
-        Receipt updated = new Receipt();
-
-        Entry existingEntry = new Entry().setId(3L).setReceipt(updated);
-        Entry newEntry = new Entry().setReceipt(updated);
-
-        updated.setEntries(asList(existingEntry, newEntry));
-
-        ArgumentCaptor<Entry> captor = ArgumentCaptor.forClass(Entry.class);
-
-        when(repository.findById(1L)).thenReturn(Optional.of(old));
-        service.update(updated, 1L);
-
-        verify(entryService).create(captor.capture());
-        verify(entryService).update(captor.capture(), eq(3L));
-
-        assertThat(captor.getAllValues()).containsExactlyInAnyOrder(existingEntry, newEntry);
-        assertThat(captor.getValue().getReceipt()).isSameAs(old);
     }
 
 }
