@@ -1,5 +1,6 @@
 package ee.taltech.receipt.service;
 
+import ee.taltech.receipt.model.Customer;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.ReceiptRepository;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,6 @@ import java.util.List;
 public class ReceiptService {
 
     private final FileSystemStorageService fileService;
-    private final EntryService entryService;
     private final CustomerService customerService;
     private final ReceiptRepository repository;
 
@@ -26,7 +26,12 @@ public class ReceiptService {
         }
 
         String name = fileService.store(file);
-        return repository.save(new Receipt().setFileName(name));
+        Receipt receipt = new Receipt()
+            .setCustomer(new Customer().setId(1L))
+            .setIssuedAt(Timestamp.from(Instant.now()))
+            .setFileName(name);
+
+        return repository.save(receipt);
     }
 
     public Receipt findById(Long id) {
@@ -36,15 +41,6 @@ public class ReceiptService {
     @Transactional
     public Receipt update(Receipt updated, Long id) {
         Receipt old = findById(id);
-
-        updated.getEntries().forEach(entry -> {
-            entry.setReceipt(old);
-            if (entry.getId() != null) {
-                entryService.update(entry, entry.getId());
-            } else {
-                entryService.create(entry);
-            }
-        });
 
         old.setIssuer(updated.getIssuer());
         old.setIssuedAt(updated.getIssuedAt());
