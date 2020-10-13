@@ -4,12 +4,14 @@ import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.service.EntryService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,26 @@ import javax.servlet.http.HttpServletResponse;
 public class EntryController {
 
     private final EntryService entryService;
+
+    @PostMapping()
+    @ApiResponses({
+        @ApiResponse(
+            code = HttpServletResponse.SC_CREATED,
+            message = "Entry created successfully"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_BAD_REQUEST,
+            message = "Your input data was invalid, please check and try again"
+        ),
+    })
+    public ResponseEntity<?> create(@RequestBody Entry entry) {
+        try {
+            Long id = entryService.create(entry).getId();
+            return new ResponseEntity<>(id, HttpStatus.CREATED);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 
     @DeleteMapping("{id}")
     @ApiResponses({

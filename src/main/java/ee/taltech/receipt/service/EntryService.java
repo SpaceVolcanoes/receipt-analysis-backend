@@ -40,7 +40,6 @@ public class EntryService {
         old.setCost(updated.getCost());
         old.setName(updated.getName());
         old.setQuantity(updated.getQuantity());
-        old.setReceipt(updated.getReceipt());
         old.setModifiedAt(Timestamp.from(Instant.now()));
 
         return repository.save(old);
