@@ -8,7 +8,8 @@ public class Abstraction {
     //todo p1
     // In your words (do not use wiki definitions)
     // What is abstraction? (P.S It has nothing to do with keyword abstract)
-    // Answer:
+    // Answer: It's a way of describing a thing/concept that exists in a real world in a more generalized way in code
+    // while concentrating on the aspects that are relevant to the domain of our application.
 
     //todo p2
     // Create an abstraction of an animal of your choice.
