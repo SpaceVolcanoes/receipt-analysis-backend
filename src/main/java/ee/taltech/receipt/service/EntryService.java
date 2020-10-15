@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -43,6 +46,10 @@ public class EntryService {
         old.setModifiedAt(Timestamp.from(Instant.now()));
 
         return repository.save(old);
+    }
+
+    public List<Entry> getEntriesSimilarTo(Long id) {
+        return new ArrayList<>(repository.findSimilarTo(id));
     }
 
 }

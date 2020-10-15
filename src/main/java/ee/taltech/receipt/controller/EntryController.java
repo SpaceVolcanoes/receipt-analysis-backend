@@ -1,5 +1,6 @@
 package ee.taltech.receipt.controller;
 
+import ee.taltech.receipt.dto.EntrySummary;
 import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.service.EntryService;
 import io.swagger.annotations.ApiResponse;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("entry")
 @RestController
@@ -73,6 +76,29 @@ public class EntryController {
         try {
             Entry entry = entryService.findById(id);
             return new ResponseEntity<>(entry, HttpStatus.OK);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("{id}/similar")
+    @ApiResponses({
+        @ApiResponse(
+            code = HttpServletResponse.SC_OK,
+            message = "Similar entries found"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_NOT_FOUND,
+            message = "Could not find similar entries"
+        )
+    })
+    public ResponseEntity<?> getSimilarEntries(@PathVariable Long id) {
+        try {
+            List<EntrySummary> entries = entryService.getEntriesSimilarTo(id)
+                .stream()
+                .map(EntrySummary::new)
+                .collect(Collectors.toList());
+            return new ResponseEntity<>(entries, HttpStatus.OK);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.notFound().build();
         }
