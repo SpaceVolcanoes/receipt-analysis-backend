@@ -1,7 +1,18 @@
 package ee.taltech.receipt.a_theory.question6.vineyard;
 
+import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
+
+@RequestMapping("vineyard")
+@RestController
 public class Vineyard {
 
     //todo for question 6 there are 4 assignments in total
@@ -31,16 +42,28 @@ public class Vineyard {
     // Uncle Maxime
 
 
-    //todo here are some examples of empty methods
-    List<Wine> emptyMethodReturnList(){
-        return List.of();
+    @GetMapping()
+    @ApiOperation(
+        value = "Get all wines",
+        produces = "text/plain"
+    )
+    ResponseEntity<?> getWines() {
+        return new ResponseEntity<>(List.of(new Wine()), HttpStatus.OK);
     }
 
-    Wine emptyMethodReturn1(){
-        return new Wine();
+
+    @GetMapping("wine")
+    @ApiOperation(
+        value = "Display wines by filter/search parameters",
+        produces = "text/plain"
+    )
+    ResponseEntity<?> getSomeWines(
+            @RequestParam(defaultValue = "") String region,
+            @RequestParam(defaultValue = "") String year,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String grape
+    ) {
+        return new ResponseEntity<>(List.of(new Wine()), HttpStatus.OK);
     }
 
-    void emptyMethodVoid(){
-
-    }
 }
