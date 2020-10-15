@@ -5,13 +5,10 @@
 
 ## Accesing the server:
 
-#### You can get into the server with the SV.pem keys file by:
-- SV.pem file is in the root folder right now
-`ssh -i SV.pem ubuntu@13.53.140.53`
+Send your rsa public key to @markaa or someone who can give you access then you can access the server simply by:
 
-#### But if you have your own rsa public key then you can copy it to the server by executing:
-`cat .ssh/id_rsa.pub | ssh -i SV.pem ubuntu@13.53.140.53 "cat >> .ssh/authorized_keys"`
-*it's kind of a hack but we can't use ssh-copy-id because pem files are weird*
-
-#### Then you can access the server simply by:
 `ssh ubuntu@13.53.140.53`
+
+## Copying files to server 
+
+`scp /file/or/folder ubuntu@13.53.140.53:/folder`
