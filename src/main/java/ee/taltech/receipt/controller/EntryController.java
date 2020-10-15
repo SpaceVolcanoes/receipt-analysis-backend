@@ -5,7 +5,6 @@ import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.service.EntryService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ResponseHeader;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

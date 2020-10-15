@@ -1,8 +1,6 @@
 package ee.taltech.receipt.controller;
 
 import ee.taltech.receipt.dto.EntrySummary;
-import ee.taltech.receipt.dto.ReceiptSummary;
-import ee.taltech.receipt.exception.StorageException;
 import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.service.EntryService;
