@@ -1,7 +1,18 @@
 package ee.taltech.receipt.a_theory.question6.sheep;
 
+import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
+@RequestMapping("sheepfarm")
+@RestController
 public class SheepFarm {
 
     //todo for question 6 there are 4 assignments in total
@@ -31,15 +42,37 @@ public class SheepFarm {
     // That's it. Can you do that for me?
 
     //todo here are some examples of empty methods
-    List<Sheep> emptyMethodReturnList(){
-        return List.of();
+
+    @GetMapping
+    @ApiOperation(
+        value = "Get all sheep",
+        produces = "text/plain"
+    )
+    ResponseEntity<?> getSheep() {
+        return new ResponseEntity<>(List.of(new Sheep()), HttpStatus.OK);
     }
 
-    Sheep emptyMethodReturn1(){
+    @ApiOperation(
+        value = "Get details of a specific sheep",
+        produces = "text/plain"
+    )
+    @GetMapping({"id"})
+    Sheep getSheepDetails() {
         return new Sheep();
     }
 
-    void emptyMethodVoid(){
+    @ApiOperation(
+        value = "Add a new sheep to database",
+        produces = "text/plain"
+    )
+    @PutMapping()
+    void addSheep() { }
 
-    }
+    @ApiOperation(
+        value = "Remove a sheep from database",
+        produces = "text/plain"
+    )
+    @DeleteMapping({"id"})
+    void removeSheep() { }
+
 }
