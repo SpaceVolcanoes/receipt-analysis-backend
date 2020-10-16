@@ -1,17 +1,15 @@
 package ee.taltech.receipt.a_theory.question6.sheep;
 
 import io.swagger.annotations.ApiOperation;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("sheepfarm")
+@RequestMapping("sheep")
 @RestController
 public class SheepFarm {
 
@@ -46,15 +44,15 @@ public class SheepFarm {
     @GetMapping
     @ApiOperation(
         value = "Get all sheep",
-        produces = "text/plain"
+        produces = "application/json"
     )
-    ResponseEntity<?> getSheep() {
-        return new ResponseEntity<>(List.of(new Sheep()), HttpStatus.OK);
+    List<Sheep> getSheep() {
+        return List.of(new Sheep());
     }
 
     @ApiOperation(
         value = "Get details of a specific sheep",
-        produces = "text/plain"
+        produces = "application/json"
     )
     @GetMapping({"id"})
     Sheep getSheepDetails() {
@@ -63,16 +61,17 @@ public class SheepFarm {
 
     @ApiOperation(
         value = "Add a new sheep to database",
-        produces = "text/plain"
+        produces = "application/json"
     )
-    @PutMapping()
-    void addSheep() { }
+    @PostMapping()
+    Sheep addSheep(Sheep sheep) {
+        return sheep;
+    }
 
     @ApiOperation(
-        value = "Remove a sheep from database",
-        produces = "text/plain"
+        value = "Remove a sheep from database"
     )
     @DeleteMapping({"id"})
-    void removeSheep() { }
-
+    void removeSheep() {
+    }
 }
