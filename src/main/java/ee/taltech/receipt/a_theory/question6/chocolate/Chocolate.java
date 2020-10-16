@@ -1,7 +1,26 @@
 package ee.taltech.receipt.a_theory.question6.chocolate;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+
+@RequestMapping("chocolate")
+@RestController
+@Api(description = "The best cafe for cakes")
 public class Chocolate {
 
     //todo for question 6 there are 4 assignments in total
@@ -30,17 +49,43 @@ public class Chocolate {
     // I take existing Sachertorte and I make it better and next week I make it better and next week...
     // Can you do this? I need this system tomorrow!
 
-
-    //todo here are some examples of empty methods
-    List<Cake> emptyMethodReturnList(){
+    @GetMapping
+    @ApiOperation(
+        value = "List the cakes, optionally filter by ingredients and toppings",
+        produces = "application/json"
+    )
+    @ApiResponse(code = SC_OK, message = "These cakes were available")
+    public List<Cake> listCakes(
+        @RequestParam(value = "ingredients", required = false) List<String> ingredients,
+        @RequestParam(value = "toppings", required = false) List<String> toppings
+    ) {
         return List.of();
     }
 
-    Cake emptyMethodReturn1(){
-        return new Cake();
+    @PostMapping
+    @ApiOperation(
+        value = "Add a newly baked cake to be sold to loyal customers",
+        produces = "application/json"
+    )
+    @ApiResponses({
+        @ApiResponse(code = SC_OK, message = "New cake added"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "Missing mandatory properties")
+    })
+    public Cake add(@RequestBody Cake cake) {
+        return cake;
     }
 
-    void emptyMethodVoid(){
-
+    @PutMapping("{id}")
+    @ApiOperation(
+        value = "Make an existing cake even better and better",
+        produces = "application/json"
+    )
+    @ApiResponses({
+        @ApiResponse(code = SC_OK, message = "Cake successfully made better"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "Missing mandatory properties")
+    })
+    public Cake update(@RequestBody Cake cake, @PathVariable Long id) {
+        return cake;
     }
+
 }
