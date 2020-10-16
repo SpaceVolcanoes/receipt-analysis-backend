@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +27,10 @@ public class EntryService {
         return repository.save(entry);
     }
 
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
     public Entry findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No Entry with ID " + id));
     }
@@ -36,10 +42,13 @@ public class EntryService {
         old.setCost(updated.getCost());
         old.setName(updated.getName());
         old.setQuantity(updated.getQuantity());
-        old.setReceipt(updated.getReceipt());
         old.setModifiedAt(Timestamp.from(Instant.now()));
 
         return repository.save(old);
+    }
+
+    public List<Entry> getEntriesSimilarTo(Long id) {
+        return new ArrayList<>(repository.findSimilarTo(id));
     }
 
 }

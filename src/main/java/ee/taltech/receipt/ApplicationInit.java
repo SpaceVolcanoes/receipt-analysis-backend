@@ -37,7 +37,8 @@ public class ApplicationInit implements CommandLineRunner {
             new Entry().setName("Taburet").setCost(15.99).setReceipt(coop),
             new Entry().setName("Muna").setCost(2.99).setReceipt(rimi),
             new Entry().setName("Vesi").setCost(0.99).setReceipt(rimi),
-            new Entry().setName("Kana").setCost(3.35).setReceipt(rimi)
+            new Entry().setName("Kana").setCost(3.35).setReceipt(rimi),
+            new Entry().setName("Piim").setCost(3.0).setReceipt(coop)
         ));
     }
 
