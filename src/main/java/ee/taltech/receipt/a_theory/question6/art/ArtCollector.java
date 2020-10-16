@@ -1,7 +1,25 @@
 package ee.taltech.receipt.a_theory.question6.art;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+
+@RestController
+@RequestMapping("art")
 public class ArtCollector {
 
     //todo for question 6 there are 4 assignments in total
@@ -29,16 +47,51 @@ public class ArtCollector {
     // I keep all my paintings, never throw anything away. Just buy bigger house.
     // How much do you want for this system?
 
-    //todo here are some examples of empty methods
-    List<Painting> emptyMethodReturnList(){
+    @PutMapping("pageSize")
+    @ApiOperation(
+        value = "Update the page size"
+    )
+    @ApiResponse(code = SC_OK, message = "Page size updated")
+    void updatePageSize(
+        @RequestParam(value = "size", required = true) Long size
+    ) {
+
+    }
+
+    @GetMapping("page/{id}")
+    @ApiOperation(
+        value = "List paintings on a page",
+        produces = "application/json"
+    )
+    @ApiResponse(code = SC_OK, message = "Page found")
+    List<Painting> getPage(@PathVariable Long id) {
         return List.of();
     }
 
-    Painting emptyMethodReturn1(){
+    @PostMapping
+    @ApiOperation(
+        value = "Add a new painting",
+        produces = "application/json"
+    )
+    @ApiResponses({
+        @ApiResponse(code = SC_OK, message = "New painting added"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "Invalid painting")
+    })
+    public Painting add(@RequestBody Painting painting) {
+        return painting;
+    }
+
+    @GetMapping("painting/{id}")
+    @ApiOperation(
+        value = "Get a specific painting",
+        produces = "application/json"
+    )
+    @ApiResponses({
+        @ApiResponse(code = SC_OK, message = "Painting found"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "That painting was not found")
+    })
+    public Painting getPainting(@PathVariable Long id) {
         return new Painting();
     }
 
-    void emptyMethodVoid(){
-
-    }
 }
