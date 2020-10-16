@@ -100,4 +100,23 @@ class ReceiptControllerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
     }
 
+    @Test
+    void deleteReceiptReturnsOkIfSuccess() {
+        Receipt receipt = new Receipt();
+
+        when(service.findById(3L)).thenReturn(receipt);
+
+        ResponseEntity<?> responseOk = controller.delete(3L);
+
+        assertThat(responseOk.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    void deleteReceiptReturnsNotFoundIfServiceThrowsIllegal() {
+        when(service.findById(3L)).thenThrow(IllegalArgumentException.class);
+
+        ResponseEntity<?> response = controller.delete(3L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
+    }
 }

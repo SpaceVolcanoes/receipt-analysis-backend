@@ -1,5 +1,6 @@
 server {
     listen  8000 default_server;
+    client_max_body_size 10M;
 
     location /api/ {
         proxy_set_header Host 127.0.0.1;
