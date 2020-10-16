@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
-@RequestMapping("receipt")
+@RequestMapping("receipts")
 @RestController
 @AllArgsConstructor
 public class ReceiptController {
