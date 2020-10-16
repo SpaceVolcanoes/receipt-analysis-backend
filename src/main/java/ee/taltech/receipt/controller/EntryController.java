@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("entry")
+@RequestMapping("entries")
 @RestController
 @AllArgsConstructor
 public class EntryController {
