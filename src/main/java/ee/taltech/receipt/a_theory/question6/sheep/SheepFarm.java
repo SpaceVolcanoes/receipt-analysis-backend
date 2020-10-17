@@ -55,7 +55,7 @@ public class SheepFarm {
         value = "Get details of a specific sheep",
         produces = "application/json"
     )
-    @GetMapping({"id"})
+    @GetMapping("{id}")
     Sheep getSheepDetails(@PathVariable Long id) {
         return new Sheep();
     }
@@ -72,7 +72,7 @@ public class SheepFarm {
     @ApiOperation(
         value = "Remove a sheep from database"
     )
-    @DeleteMapping({"id"})
+    @DeleteMapping("{id}")
     void removeSheep(@PathVariable Long id) {
     }
 }
