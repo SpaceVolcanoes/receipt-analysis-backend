@@ -44,3 +44,4 @@ A service for uploading the images of your purchase receipts to keep track of yo
 - [Database](docs/database.md)
 - [Lombok](docs/lombok.md)
 - [Server](docs/aws_server.md)
+- [Techical](docs/technical.md)
