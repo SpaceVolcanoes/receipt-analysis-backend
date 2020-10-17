@@ -1,6 +1,5 @@
 package ee.taltech.receipt.a_theory.question6.art;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -49,7 +48,7 @@ public class ArtCollector {
 
     @PutMapping("pageSize")
     @ApiOperation(
-        value = "Update the page size"
+        value = "Update the page size, default value is 50"
     )
     @ApiResponse(code = SC_OK, message = "Page size updated")
     void updatePageSize(
