@@ -31,6 +31,12 @@ class EntryServiceTest {
     private EntryService service;
 
     @Test
+    void getAmountReturnsCount() {
+        when(repository.count()).thenReturn(10L);
+        assertThat(service.getAmount()).isEqualTo(10L);
+    }
+
+    @Test
     void createThrowsIfIdPresent() {
         Throwable thrown = catchThrowable(() -> service.create(new Entry().setId(3L)));
 

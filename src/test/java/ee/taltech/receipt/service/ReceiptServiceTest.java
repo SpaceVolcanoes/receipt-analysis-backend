@@ -39,6 +39,12 @@ class ReceiptServiceTest {
     private ReceiptService service;
 
     @Test
+    void getAmountReturnsCount() {
+        when(repository.count()).thenReturn(10L);
+        assertThat(service.getAmount()).isEqualTo(10L);
+    }
+
+    @Test
     void createThrowsIfFileNotImage() {
         when(fileService.isImage(FILE)).thenReturn(false);
 
