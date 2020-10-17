@@ -18,7 +18,7 @@ import java.util.List;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
-@RequestMapping("chocolate")
+@RequestMapping("cakes")
 @RestController
 @Api(description = "The best cafe for cakes")
 public class Chocolate {
