@@ -6,8 +6,11 @@ import ee.taltech.receipt.model.Receipt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
 
@@ -40,6 +43,28 @@ class ReceiptSummaryTest {
 
         receiptSummary1 = new ReceiptSummary(receipt1);
         receiptSummary2 = new ReceiptSummary(receipt2);
+    }
+
+    @Test
+    void fieldsAreCopiedOverAtConstruction() {
+        Receipt receipt = new Receipt().setId(1L)
+            .setCustomer(new Customer().setId(3L))
+            .setIssuer("Maxima")
+            .setIssuedAt(Timestamp.valueOf("2020-09-13 11:00:05"))
+            .setCreatedAt(Timestamp.valueOf("2020-09-13 11:00:07"))
+            .setModifiedAt(Timestamp.valueOf("2020-09-13 11:00:11"))
+            .setEntries(emptyList());
+
+        ReceiptSummary summary = new ReceiptSummary(receipt);
+
+        assertThat(summary.getId()).isEqualTo(1L);
+        assertThat(summary.getCustomerId()).isEqualTo(3L);
+        assertThat(summary.getIssuer()).isEqualTo("Maxima");
+        assertThat(summary.getIssuedAt()).isEqualTo(Timestamp.valueOf("2020-09-13 11:00:05"));
+        assertThat(summary.getCreatedAt()).isEqualTo(Timestamp.valueOf("2020-09-13 11:00:07"));
+        assertThat(summary.getModifiedAt()).isEqualTo(Timestamp.valueOf("2020-09-13 11:00:11"));
+        assertThat(summary.getNumberOfEntries()).isEqualTo(0);
+        assertThat(summary.getTotalCostOfEntries()).isEqualTo(0.0);
     }
 
     @Test
