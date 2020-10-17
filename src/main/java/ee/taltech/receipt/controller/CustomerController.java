@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("customer")
+@RequestMapping("customers")
 @RestController
 @AllArgsConstructor
 public class CustomerController {
