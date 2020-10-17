@@ -51,17 +51,16 @@ public class Vineyard {
         return new ResponseEntity<>(List.of(new Wine()), HttpStatus.OK);
     }
 
-
     @GetMapping("wine")
     @ApiOperation(
         value = "Display wines by filter/search parameters",
         produces = "text/plain"
     )
     ResponseEntity<?> getSomeWines(
-            @RequestParam(defaultValue = "") String region,
-            @RequestParam(defaultValue = "") String year,
-            @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "") String grape
+        @RequestParam(defaultValue = "") String region,
+        @RequestParam(defaultValue = "") Integer year,
+        @RequestParam(defaultValue = "") String name,
+        @RequestParam(defaultValue = "") String grape
     ) {
         return new ResponseEntity<>(List.of(new Wine()), HttpStatus.OK);
     }
