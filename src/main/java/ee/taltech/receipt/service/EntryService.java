@@ -27,6 +27,10 @@ public class EntryService {
         return repository.save(entry);
     }
 
+    public Long getAmount() {
+        return repository.count();
+    }
+
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

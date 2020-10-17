@@ -34,6 +34,10 @@ public class ReceiptService {
         return repository.save(receipt);
     }
 
+    public Long getAmount() {
+        return repository.count();
+    }
+
     public void delete(Receipt receipt) {
         repository.delete(receipt);
     }
