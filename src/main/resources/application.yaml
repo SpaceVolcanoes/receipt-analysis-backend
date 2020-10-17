@@ -1,0 +1,25 @@
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults : false
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:postgresql://localhost:5432/analysis
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: development
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+logging:
+  file:
+    path: ./logs
+  level:
+    root: INFO

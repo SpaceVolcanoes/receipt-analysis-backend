@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    container_name: "analysis-db"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_DB=analysis
+    volumes:
+      - analysis-db-data:/var/lib/postgresql/data
+
+  proxy:
+    image: nginx:1.19.2
+    container_name: proxy
+    restart: always
+    volumes:
+      - ./docker/nginx/templates:/etc/nginx/templates
+    environment:
+      - DOCKER_HOTS=localhost
+    ports:
+      - "8000:8000"
+    network_mode: host
+
+volumes:
+  analysis-db-data:
