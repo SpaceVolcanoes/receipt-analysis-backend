@@ -45,7 +45,7 @@ public class FileUploadController {
 
         return ResponseEntity.ok().header(
             HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + file.getFilename() + "\""
+            "inline; filename=\"" + file.getFilename() + "\""
         ).body(file);
     }
 

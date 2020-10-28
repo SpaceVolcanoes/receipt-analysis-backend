@@ -33,6 +33,10 @@ A service for uploading the images of your purchase receipts to keep track of yo
 #### Nginx proxy
 - proxy redirect traffic from `localhost:8000/api/*` to backend and `localhost:8000/*` to frontend
 
+## Build production container
+```
+docker build -t receiptanalysis/backend .
+```
 
 ## Swagger
 
