@@ -48,3 +48,19 @@ docker build -t receiptanalysis/backend .
 - [Database](docs/database.md)
 - [Lombok](docs/lombok.md)
 - [Server](docs/aws_server.md)
+
+## Production deploy
+
+### Build container
+```
+docker build -t receiptanalysis/backend .
+echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
+docker push receiptanalysis/backend
+docker logout
+```
+
+### Update in production env
+```
+docker pull receiptanalysis/backend
+docker stop analysis-backend && docker rm analysis-backend && docker-compose up -d backend
+```
