@@ -4,6 +4,7 @@ import ee.taltech.receipt.configuration.StorageProperties;
 import ee.taltech.receipt.exception.StorageException;
 import ee.taltech.receipt.exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,18 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import static java.lang.Integer.parseInt;
+
 @Service
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
+    private final Environment environment;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties) {
+    public FileSystemStorageService(StorageProperties properties, Environment environment) {
         this.rootLocation = Paths.get(properties.getLocation());
+        this.environment = environment;
     }
 
     public boolean isImage(MultipartFile file) {
@@ -48,6 +53,15 @@ public class FileSystemStorageService implements StorageService {
         if (file.getOriginalFilename() == null) {
             throw new StorageException("File is missing a name");
         }
+
+        String limit = environment.getProperty("FILE_LIMIT");
+        if (limit != null && parseInt(limit) <= loadAll().count()) {
+            throw new IllegalStateException(
+                "Service has reached its current capacity, "
+                + "please contact the service administrator for more information"
+            );
+        }
+
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {

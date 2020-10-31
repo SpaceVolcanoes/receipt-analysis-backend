@@ -57,6 +57,15 @@ class ReceiptControllerTest {
     }
 
     @Test
+    void createReturnsForbiddenIfIllegalState() {
+        when(service.create(FILE)).thenThrow(IllegalStateException.class);
+
+        ResponseEntity<?> response = controller.create(FILE);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(403);
+    }
+
+    @Test
     void getReceiptReturnsReceiptFromServiceIfFound() {
         Receipt receipt = new Receipt();
 

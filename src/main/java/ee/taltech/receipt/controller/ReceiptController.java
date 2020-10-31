@@ -44,6 +44,10 @@ public class ReceiptController {
             message = "Receipt created successfully"
         ),
         @ApiResponse(
+            code = HttpServletResponse.SC_FORBIDDEN,
+            message = "Service has reached its current capacity"
+        ),
+        @ApiResponse(
             code = HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
             message = "Receipt file type must be an image"
         ),
@@ -65,6 +69,8 @@ public class ReceiptController {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).header("Retry-After", "10").build();
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+        } catch (IllegalStateException exception) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 

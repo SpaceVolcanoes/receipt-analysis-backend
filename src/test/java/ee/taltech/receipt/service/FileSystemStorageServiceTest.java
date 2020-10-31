@@ -7,6 +7,7 @@ import ee.taltech.receipt.exception.StorageFileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
@@ -26,11 +29,13 @@ class FileSystemStorageServiceTest implements FileAwareTest {
 
     private final StorageProperties properties = new StorageProperties();
     private FileSystemStorageService service;
+    private Environment environment;
 
     @BeforeEach
     public void init() {
         properties.setLocation("target/files");
-        service = new FileSystemStorageService(properties);
+        environment = mock(Environment.class);
+        service = new FileSystemStorageService(properties, environment);
         service.init();
     }
 
@@ -59,6 +64,19 @@ class FileSystemStorageServiceTest implements FileAwareTest {
         assertThat(thrown)
             .isInstanceOf(StorageException.class)
             .hasMessage("Cannot store file with relative path outside current directory ../foo.txt");
+    }
+
+    @Test
+    public void storeThrowsWhenLimitExceeded() {
+        when(environment.getProperty("FILE_LIMIT")).thenReturn("0");
+
+        MultipartFile file = new MockMultipartFile("foo", "foo.txt", TEXT_PLAIN_VALUE, TEXT_CONTENT);
+
+        Throwable thrown = catchThrowable(() -> service.store(file));
+
+        assertThat(thrown)
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageStartingWith("Service has reached its current capacity");
     }
 
     @Test
