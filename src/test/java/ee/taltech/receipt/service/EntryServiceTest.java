@@ -31,6 +31,12 @@ class EntryServiceTest {
     private EntryService service;
 
     @Test
+    void getAmountReturnsCount() {
+        when(repository.count()).thenReturn(10L);
+        assertThat(service.getAmount()).isEqualTo(10L);
+    }
+
+    @Test
     void createThrowsIfIdPresent() {
         Throwable thrown = catchThrowable(() -> service.create(new Entry().setId(3L)));
 
@@ -116,7 +122,7 @@ class EntryServiceTest {
         assertThat(actual.getCost()).isEqualTo(11.0);
         assertThat(actual.getName()).isEqualTo("Audi");
         assertThat(actual.getQuantity()).isEqualTo(7L);
-        assertThat(actual.getReceipt()).isSameAs(receipt);
+        assertThat(actual.getReceipt()).isSameAs(null);
         assertThat(actual.getCreatedAt()).isEqualTo(Timestamp.valueOf("2020-09-14 11:00:00"));
         assertThat(actual.getModifiedAt()).isAfter(Date.from(Instant.parse("2020-09-21T11:00:00.000Z")));
     }

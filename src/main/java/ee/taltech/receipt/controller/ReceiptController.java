@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
-@RequestMapping("receipt")
+@RequestMapping("receipts")
 @RestController
 @AllArgsConstructor
 public class ReceiptController {
@@ -64,6 +65,27 @@ public class ReceiptController {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).header("Retry-After", "10").build();
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    @ApiResponses({
+        @ApiResponse(
+            code = HttpServletResponse.SC_OK,
+            message = "Receipt deleted"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_NOT_FOUND,
+            message = "No Receipt exist for a given ID"
+        ),
+    })
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            Receipt receipt = service.findById(id);
+            service.delete(receipt);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.notFound().build();
         }
     }
 

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -94,7 +95,7 @@ public class FileSystemStorageService implements StorageService {
             }
 
             throw new StorageFileNotFoundException("Could not read file: " + filename);
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | InvalidPathException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
     }
