@@ -20,7 +20,12 @@ build:
         - build/libs/*.jar
 
 docker build:
+  image: docker:19.03.8
   stage: build and push docker image
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.8-dind
   before_script:
     - echo "Building and pushing docker image"
     - docker info
