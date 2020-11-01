@@ -12,7 +12,6 @@ build:
   stage: build jar
   before_script:
     - echo "Building jar"
-    - source .${CI_COMMIT_REF_NAME}.env
   script:
     - ./gradlew assemble
   artifacts:
@@ -22,7 +21,6 @@ build:
 docker build:
   stage: build and push docker image
   before_script:
-    - source .${CI_COMMIT_REF_NAME}.env
     - echo "Building and pushing docker image"
   script:
     - docker build -t receiptanalysis/backend .
@@ -33,7 +31,6 @@ docker build:
 deploy:
   stage: deploy
   before_script:
-    - source .${CI_COMMIT_REF_NAME}.env
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
