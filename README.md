@@ -62,5 +62,5 @@ docker logout
 ### Update in production env
 ```
 docker pull receiptanalysis/backend
-docker stop analysis-backend && docker rm analysis-backend && docker-compose up -d backend
+docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
 ```

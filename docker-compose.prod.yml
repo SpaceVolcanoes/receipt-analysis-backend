@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+
+  backend:
+    image: receiptanalysis/backend
+    restart: always
+    container_name: "analysis-backend"
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/analysis
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=development
+      - HOST=receipt.modalstudio.com
+      - BASEPATH=/api
+      - LOGGING_LEVEL_ROOT=INFO
+      - FILE_LIMIT=100
+    volumes:
+      - analysis-back-logs:/logs
+      - analysis-back-files:/files
+
+  db:
+    image: postgres
+    restart: always
+    container_name: "analysis-db"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_DB=analysis
+    volumes:
+      - analysis-db-data:/var/lib/postgresql/data
+
+volumes:
+  analysis-db-data:
+  analysis-back-logs:
+  analysis-back-files:
