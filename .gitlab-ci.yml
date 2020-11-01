@@ -1,0 +1,50 @@
+stages:
+  - build jar
+  - build and push docker image
+  - deploy
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+build:
+  stage: build jar
+  before_script:
+    - echo "Building jar"
+    - source .${CI_COMMIT_REF_NAME}.env
+  script:
+    - ./gradlew assemble
+  artifacts:
+      paths:
+        - build/libs/*.jar
+
+docker build:
+  stage: build and push docker image
+  before_script:
+    - source .${CI_COMMIT_REF_NAME}.env
+    - echo "Building and pushing docker image"
+  script:
+    - docker build -t receiptanalysis/backend .
+    - echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
+    - docker push receiptanalysis/backend
+    - docker logout
+
+deploy:
+  stage: deploy
+  before_script:
+    - source .${CI_COMMIT_REF_NAME}.env
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - git config --global user.email "ec2@server.com"
+    - git config --global user.name "EC2_SERVER"
+    - echo "Deploying"
+  script:
+    - ssh ubuntu@ec2-13-53-140-53.eu-north-1.compute.amazonaws.com
+    - cp docker-compose.prod.yml docker-compose.backend.yml
+    - docker pull receiptanalysis/backend
+    - docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
+    - docker logout
