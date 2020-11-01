@@ -12,6 +12,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/analysis
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=development
+      - OCR_URL=http://ocr:5000/
       - HOST=receipt.modalstudio.com
       - BASEPATH=/api
       - LOGGING_LEVEL_ROOT=INFO
@@ -19,6 +20,13 @@ services:
     volumes:
       - analysis-back-logs:/logs
       - analysis-back-files:/files
+
+  ocr:
+    image: receiptanalysis/ocr
+    restart: always
+    container_name: "analysis-ocr"
+    volumes:
+      - analysis-ocr-files:/home/files
 
   db:
     image: postgres
@@ -37,3 +45,4 @@ volumes:
   analysis-db-data:
   analysis-back-logs:
   analysis-back-files:
+  analysis-ocr-files:

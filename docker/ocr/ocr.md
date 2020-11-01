@@ -1,24 +1,23 @@
 # OCR container for receipt image to text
 
-## Building
+## Example usage
 
 ```
-docker build -t tess .
+curl -X POST -F "image=@receipt.png" localhost:8800/?lang=est
 ```
 
-## Example container usage
+## Production deploy
 
+### Build container
 ```
-docker run -d -p 8800:5000 --name=tess tess:latest
-
-curl -X POST -F "image=@/path/to/receipt.png" localhost:8800/
+docker build -t receiptanalysis/ocr .
+echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
+docker push receiptanalysis/ocr
+docker logout
 ```
 
-## Script usage in container
-
+### Update in production env
 ```
-docker exec -it tess bash
-
-python3 threshold.py receipt.png
-python3 detect.py receipt.png
+docker pull receiptanalysis/backend
+docker stop analysis-ocr && docker rm analysis-ocr && docker-compose -f docker-compose.backend.yml up -d ocr
 ```
