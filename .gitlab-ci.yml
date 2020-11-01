@@ -9,6 +9,7 @@ stages:
 
 build:
   stage: build jar
+  image: java:8-jdk
   before_script:
     - echo "Building jar"
     - chmod +x ./gradlew
