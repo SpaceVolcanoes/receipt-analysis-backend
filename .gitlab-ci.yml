@@ -49,10 +49,12 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - ssh-keyscan -H 13.53.140.53 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
     - echo "Deploying"
   script:
-    - scp docker-compose.prod.yml ubuntu@ec2-13-53-140-53.eu-north-1.compute.amazonaws.com:/home/ubuntu/docker-compose.backend.yml
-    - ssh ubuntu@ec2-13-53-140-53.eu-north-1.compute.amazonaws.com
+    - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
+    - ssh ubuntu@13.53.140.53
     - docker pull receiptanalysis/backend
     - docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
     - docker logout
