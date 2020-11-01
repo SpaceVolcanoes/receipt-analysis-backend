@@ -1,12 +1,11 @@
+image: receiptanalysis/backend
+services:
+  - docker:backend
+
 stages:
   - build jar
   - build and push docker image
   - deploy
-
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
 
 build:
   stage: build jar
