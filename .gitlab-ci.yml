@@ -1,6 +1,6 @@
-image: receiptanalysis/backend
+image: docker:latest
 services:
-  - docker:backend
+  - docker:dind
 
 stages:
   - build jar
