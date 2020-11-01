@@ -8,6 +8,8 @@ stages:
   - deploy
 
 build:
+  tags:
+    - space
   stage: build jar
   image: openjdk:14
   before_script:
@@ -20,6 +22,8 @@ build:
         - build/libs/*.jar
 
 docker build:
+  tags:
+    - space  
   image: docker:19.03.8
   stage: build and push docker image
   variables:
@@ -36,6 +40,8 @@ docker build:
     - docker logout
 
 deploy:
+  tags:
+    - space  
   stage: deploy
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
