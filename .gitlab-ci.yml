@@ -12,6 +12,7 @@ build:
   stage: build jar
   before_script:
     - echo "Building jar"
+    - chmod +x ./gradlew
   script:
     - ./gradlew assemble
   artifacts:
