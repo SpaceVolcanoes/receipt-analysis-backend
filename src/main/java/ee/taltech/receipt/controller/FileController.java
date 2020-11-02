@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping("files")
 @RestController
 @AllArgsConstructor
-public class FileUploadController {
+public class FileController {
 
     private final StorageService storageService;
 
@@ -35,18 +35,19 @@ public class FileUploadController {
             .collect(Collectors.toList());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @GetMapping("{filename}")
     @ApiOperation(
-        value = "Get the file by name",
-        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+        value = "Get the file by name"
     )
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
+        String type = file.getFilename().endsWith("png") ? MediaType.IMAGE_PNG_VALUE : MediaType.IMAGE_JPEG_VALUE;
 
-        return ResponseEntity.ok().header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            "inline; filename=\"" + file.getFilename() + "\""
-        ).body(file);
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
+            .header(HttpHeaders.CONTENT_TYPE, type)
+            .body(file);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
