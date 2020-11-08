@@ -1,5 +1,6 @@
 package ee.taltech.receipt.service;
 
+import ee.taltech.receipt.dto.Base64File;
 import ee.taltech.receipt.model.Customer;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.ReceiptRepository;
@@ -20,16 +21,24 @@ public class ReceiptService {
     private final CustomerService customerService;
     private final ReceiptRepository repository;
 
+    public Receipt create(Base64File base64) {
+        String name = fileService.store(base64);
+        return create(name);
+    }
+
     public Receipt create(MultipartFile file) {
         if (!fileService.isImage(file)) {
             throw new IllegalArgumentException("Receipt file must be an image");
         }
-
         String name = fileService.store(file);
+        return create(name);
+    }
+
+    private Receipt create(String fileName) {
         Receipt receipt = new Receipt()
             .setCustomer(new Customer().setId(1L))
             .setIssuedAt(Timestamp.from(Instant.now()))
-            .setFileName(name);
+            .setFileName(fileName);
 
         return repository.save(receipt);
     }
