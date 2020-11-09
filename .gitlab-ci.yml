@@ -26,6 +26,9 @@ docker build:
     - space  
   image: docker:19.03.8
   stage: build and push docker image
+  only:
+    refs:
+      - main
   variables:
     DOCKER_TLS_CERTDIR: ""
   services:
@@ -43,6 +46,9 @@ deploy:
   tags:
     - space  
   stage: deploy
+  only:
+    refs:
+      - main
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
     - eval $(ssh-agent -s)
