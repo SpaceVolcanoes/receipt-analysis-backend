@@ -43,10 +43,6 @@ deploy:
   tags:
     - space  
   stage: deploy
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  services:
-    - docker:19.03.8-dind
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
     - eval $(ssh-agent -s)
@@ -59,7 +55,6 @@ deploy:
     - echo "Deploying"
   script:
     - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
-    - ssh ubuntu@13.53.140.53
-    - docker pull receiptanalysis/backend
-    - docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
-    - docker logout
+    - ssh ubuntu@13.53.140.53 "docker pull receiptanalysis/backend"
+    - ssh ubuntu@13.53.140.53 "docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend"
+    - ssh ubuntu@13.53.140.53 "docker logout"
