@@ -53,8 +53,8 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
     - echo "Deploying"
   script:
-    - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
-    - ssh ubuntu@13.53.140.53
+    - scp -i $SSH_PRIVATE_KEY docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
+    - ssh -i $SSH_PRIVATE_KEY ubuntu@13.53.140.53
     - docker pull receiptanalysis/backend
     - docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
     - docker logout
