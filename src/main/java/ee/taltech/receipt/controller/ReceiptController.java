@@ -1,5 +1,6 @@
 package ee.taltech.receipt.controller;
 
+import ee.taltech.receipt.dto.Base64File;
 import ee.taltech.receipt.exception.StorageException;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.service.ReceiptService;
@@ -61,17 +62,31 @@ public class ReceiptController {
         @ApiParam(name = "file", value = "Select the file to Upload", required = true)
         @RequestPart("file") MultipartFile file
     ) {
-        try {
-            Long id = service.create(file).getId();
+        return createReceipt(file);
+    }
 
-            return new ResponseEntity<>(id, HttpStatus.CREATED);
-        } catch (StorageException exception) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).header("Retry-After", "10").build();
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
-        } catch (IllegalStateException exception) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    @PostMapping("/base64")
+    @ApiOperation(
+        value = "Create a Receipt from a base64 image file",
+        produces = "text/plain"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = HttpServletResponse.SC_CREATED,
+            message = "Receipt created successfully"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
+            message = "Receipt file type must be an image"
+        ),
+        @ApiResponse(
+            code = HttpServletResponse.SC_SERVICE_UNAVAILABLE,
+            responseHeaders={@ResponseHeader(name = "Retry-After", response = Long.class, description = "Delta seconds")},
+            message = "Service temporarily unavailable, try again in 10 seconds"
+        )
+    })
+    public ResponseEntity<?> create(@RequestBody Base64File file) {
+        return createReceipt(file);
     }
 
     @DeleteMapping("{id}")
@@ -132,6 +147,27 @@ public class ReceiptController {
             return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    /**
+     * Handle multiple input and response cases for create endpoint
+     */
+    private <T> ResponseEntity<?> createReceipt(T file) {
+        try {
+            if (file instanceof Base64File) {
+                return new ResponseEntity<>(service.create((Base64File) file).getId(), HttpStatus.CREATED);
+            }
+            if (file instanceof MultipartFile) {
+                return new ResponseEntity<>(service.create((MultipartFile) file).getId(), HttpStatus.CREATED);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (StorageException exception) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).header("Retry-After", "10").build();
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+        } catch (IllegalStateException exception) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
