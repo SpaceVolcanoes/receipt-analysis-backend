@@ -51,10 +51,11 @@ deploy:
     - chmod 700 ~/.ssh
     - ssh-keyscan -H 13.53.140.53 >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Deploying"
   script:
-    - scp -i $SSH_PUBLIC_KEY docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
-    - ssh -i $SSH_PUBLIC_KEY ubuntu@13.53.140.53
+    - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
+    - ssh ubuntu@13.53.140.53
     - docker pull receiptanalysis/backend
     - docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
     - docker logout
