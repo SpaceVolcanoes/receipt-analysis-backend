@@ -10,7 +10,7 @@ public class FirstReadMeSOLID {
     // What is solid?
     // S (Nr1isS.java) stands for Single-responsibility and is done by Oleg Pahhomov as an example
     // O (Nr2isO.java)
-    // L (Nr3isL.java)
+    // L (Nr3isL.java) stands for Liskov substitution principle and is done by Jaak Kütt
     // I (Nr4isI.java)
     // D (Nr5isD.java)
 }
