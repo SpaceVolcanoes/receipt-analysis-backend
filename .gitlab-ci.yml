@@ -38,8 +38,10 @@ docker build:
     - docker info
   script:
     - docker build -t receiptanalysis/backend .
+    - docker build -t receiptanalysis/ocr ./docker/ocr
     - echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
     - docker push receiptanalysis/backend
+    - docker push receiptanalysis/ocr
     - docker logout
 
 deploy:
@@ -63,3 +65,5 @@ deploy:
     - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
     - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/backend"
     - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-backend && sudo docker rm analysis-backend && sudo docker-compose -f docker-compose.backend.yml up -d backend"
+    - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/ocr"
+    - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-ocr && sudo docker rm analysis-ocr && sudo docker-compose -f docker-compose.backend.yml up -d ocr"
