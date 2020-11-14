@@ -29,6 +29,7 @@ docker build:
   only:
     refs:
       - main
+      - feature/36-deploy-ocr
   variables:
     DOCKER_TLS_CERTDIR: ""
   services:
@@ -38,8 +39,10 @@ docker build:
     - docker info
   script:
     - docker build -t receiptanalysis/backend .
+    - docker build -t receiptanalysis/ocr ./docker/ocr
     - echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
     - docker push receiptanalysis/backend
+    - docker push receiptanalysis/ocr
     - docker logout
 
 deploy:
