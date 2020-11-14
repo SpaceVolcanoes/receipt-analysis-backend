@@ -52,6 +52,7 @@ deploy:
   only:
     refs:
       - main
+      - feature/36-deploy-ocr
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
     - eval $(ssh-agent -s)
@@ -66,3 +67,5 @@ deploy:
     - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
     - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/backend"
     - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-backend && sudo docker rm analysis-backend && sudo docker-compose -f docker-compose.backend.yml up -d backend"
+    - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/ocr"
+    - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-ocr && sudo docker rm analysis-ocr && sudo docker-compose -f docker-compose.backend.yml up -d ocr"
