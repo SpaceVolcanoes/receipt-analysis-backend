@@ -29,7 +29,6 @@ docker build:
   only:
     refs:
       - main
-      - feature/36-deploy-ocr
   variables:
     DOCKER_TLS_CERTDIR: ""
   services:
@@ -52,7 +51,6 @@ deploy:
   only:
     refs:
       - main
-      - feature/36-deploy-ocr
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
     - eval $(ssh-agent -s)
