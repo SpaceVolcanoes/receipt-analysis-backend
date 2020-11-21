@@ -1,14 +1,24 @@
 package a_theory.question6.vineyard;
 
+import a_theory.question6.art.Painting;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 
 @RequestMapping("vineyard")
@@ -42,15 +52,6 @@ public class Vineyard {
     // Uncle Maxime
 
 
-    @GetMapping()
-    @ApiOperation(
-        value = "Get all wines",
-        produces = "text/plain"
-    )
-    ResponseEntity<?> getWines() {
-        return new ResponseEntity<>(List.of(new Wine()), HttpStatus.OK);
-    }
-
     @GetMapping("wine")
     @ApiOperation(
         value = "Display wines by filter/search parameters",
@@ -63,6 +64,19 @@ public class Vineyard {
         @RequestParam(defaultValue = "") String grape
     ) {
         return new ResponseEntity<>(List.of(new Wine()), HttpStatus.OK);
+    }
+
+    @GetMapping("wine/{id}")
+    @ApiOperation(
+        value = "Get a specific wine",
+        produces = "application/json"
+    )
+    @ApiResponses({
+        @ApiResponse(code = SC_OK, message = "Wine found"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "That wine was not found")
+    })
+    public Wine getWine(@PathVariable Long id) {
+        return new Wine();
     }
 
 }
