@@ -12,5 +12,5 @@ public class FirstReadMeSOLID {
     // O (Nr2isO.java) stands for Open-closed principle and is done by Mart Kaasik
     // L (Nr3isL.java) stands for Liskov substitution principle and is done by Jaak Kütt
     // I (Nr4isI.java) stands for interface segregation principle and is done by Kristjan Koitla
-    // D (Nr5isD.java)
+    // D (Nr5isD.java) stands for dependency inversion principle and is done by Kristjan Kõiv
 }
