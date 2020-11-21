@@ -16,20 +16,18 @@ public class CD {
     // In the class we had 3 stages in our CI/CD process, tick which ones stand for continuous delivery
     // [] compile
     // [] test
-    // [] deploy
-    // None of them, although compile and test are parts of continuous integration, which is pretty much a prerequisite for continuous delivery
-    // Using which definition of "continuous delivery"???
+    // [x] deploy
 
     //todo D
     // Name and explain 1 benefit of CD
-    // 1
+    // 1 Frequent releases make the feedback loop from QA and customers more efficient
 
     //todo E
     // Name and explain 1 drawback of CD
-    // 1
+    // 1 CD comes with an initial setup cost and requires maintenance
 
     //todo F
     // Which one is more important to start with CI or CD? Why?
-    // CI/CD:
-    // Because:
+    // CI/CD: CD
+    // Because: It is generally a bad idea to deploy a broken application
 }
