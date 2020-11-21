@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 @AllArgsConstructor
 public class ReceiptController {
 
+    private final Logger logger;
     private final ReceiptService service;
 
     @PostMapping()
@@ -163,10 +165,13 @@ public class ReceiptController {
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (StorageException exception) {
+            logger.error(exception.getMessage(), exception);
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).header("Retry-After", "10").build();
         } catch (IllegalArgumentException exception) {
+            logger.warn(exception.getMessage(), exception);
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
         } catch (IllegalStateException exception) {
+            logger.warn(exception.getMessage(), exception);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
