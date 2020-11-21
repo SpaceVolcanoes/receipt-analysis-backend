@@ -15,6 +15,15 @@ services:
     volumes:
       - analysis-db-data:/var/lib/postgresql/data
 
+  ocr:
+    image: receiptanalysis/ocr
+    restart: always
+    container_name: "analysis-ocr"
+    ports:
+      - "8800:5000"
+    volumes:
+      - analysis-ocr-files:/home/files
+
   proxy:
     image: nginx:1.19.2
     container_name: proxy
@@ -29,3 +38,4 @@ services:
 
 volumes:
   analysis-db-data:
+  analysis-ocr-files:

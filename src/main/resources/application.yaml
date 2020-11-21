@@ -18,8 +18,29 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    jmx:
+      exposure:
+        include: "*"
 logging:
   file:
     path: ./logs
   level:
     root: INFO
+    org.apache.tomcat: INFO
+    org.apache.catalina: INFO
+server:
+  tomcat:
+    basedir: .
+    accesslog:
+      suffix: .log
+      enabled: true
+      prefix: access_log
+      directory: logs
+      pattern: common
+      file-date-format: .yyyy-MM-dd
+      buffered: false

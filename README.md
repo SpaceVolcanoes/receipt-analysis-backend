@@ -33,6 +33,10 @@ A service for uploading the images of your purchase receipts to keep track of yo
 #### Nginx proxy
 - proxy redirect traffic from `localhost:8000/api/*` to backend and `localhost:8000/*` to frontend
 
+## Build production container
+```
+docker build -t receiptanalysis/backend .
+```
 
 ## Swagger
 
@@ -44,3 +48,19 @@ A service for uploading the images of your purchase receipts to keep track of yo
 - [Database](docs/database.md)
 - [Lombok](docs/lombok.md)
 - [Server](docs/aws_server.md)
+
+## Production deploy
+
+### Build container
+```
+docker build -t receiptanalysis/backend .
+echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
+docker push receiptanalysis/backend
+docker logout
+```
+
+### Update in production env
+```
+docker pull receiptanalysis/backend
+docker stop analysis-backend && docker rm analysis-backend && docker-compose -f docker-compose.backend.yml up -d backend
+```

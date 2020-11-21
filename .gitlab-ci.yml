@@ -1,0 +1,89 @@
+variables:
+  JACOCO_CSV_LOCATION: '$CI_PROJECT_DIR/build/reports/jacoco/test/jacocoTestReport.csv'
+
+image: docker:stable
+services:
+  - docker:dind
+
+stages:
+  - test
+  - build jar
+  - build and push docker image
+  - deploy
+
+test:
+  tags:
+    - space
+  stage: test
+  image: openjdk:11.0-jdk
+  before_script:
+    - chmod +x ./gradlew
+  script:
+    - ./gradlew clean test
+    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' $JACOCO_CSV_LOCATION
+  artifacts:
+    paths:
+      - build/reports/tests/test
+      - build/jacocoHtml
+
+build:
+  tags:
+    - space
+  stage: build jar
+  image: openjdk:14
+  before_script:
+    - echo "Building jar"
+    - chmod +x ./gradlew
+  script:
+    - ./gradlew assemble
+  artifacts:
+      paths:
+        - build/libs/*.jar
+
+docker build:
+  tags:
+    - space  
+  image: docker:19.03.8
+  stage: build and push docker image
+  only:
+    refs:
+      - main
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.8-dind
+  before_script:
+    - echo "Building and pushing docker image"
+    - docker info
+  script:
+    - docker build -t receiptanalysis/backend .
+    - docker build -t receiptanalysis/ocr ./docker/ocr
+    - echo $DOCKER_PASS | docker login -u$DOCKER_USER --password-stdin
+    - docker push receiptanalysis/backend
+    - docker push receiptanalysis/ocr
+    - docker logout
+
+deploy:
+  tags:
+    - space  
+  stage: deploy
+  only:
+    refs:
+      - main
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H 13.53.140.53 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo "Deploying"
+  script:
+    - scp $DOCKER_SECRETS ubuntu@13.53.140.53:/home/ubuntu/.env
+    - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
+    - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/backend"
+    - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-backend && sudo docker rm analysis-backend && sudo docker-compose -f docker-compose.backend.yml up -d backend"
+    - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/ocr"
+    - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-ocr && sudo docker rm analysis-ocr && sudo docker-compose -f docker-compose.backend.yml up -d ocr"
