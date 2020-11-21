@@ -10,8 +10,8 @@ services:
       - "8080:8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/analysis
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=development
+      - SPRING_DATASOURCE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD
       - OCR_URL=http://ocr:5000/
       - HOST=receipt.modalstudio.com
       - BASEPATH=/api
@@ -35,8 +35,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=development
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
       - POSTGRES_DB=analysis
     volumes:
       - analysis-db-data:/var/lib/postgresql/data

@@ -81,6 +81,7 @@ deploy:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Deploying"
   script:
+    - scp $DOCKER_SECRETS ubuntu@13.53.140.53:/home/ubuntu/.env
     - scp docker-compose.prod.yml ubuntu@13.53.140.53:/home/ubuntu/docker-compose.backend.yml
     - ssh ubuntu@13.53.140.53 "sudo docker pull receiptanalysis/backend"
     - ssh ubuntu@13.53.140.53 "sudo docker stop analysis-backend && sudo docker rm analysis-backend && sudo docker-compose -f docker-compose.backend.yml up -d backend"
