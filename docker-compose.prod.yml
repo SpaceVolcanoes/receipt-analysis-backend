@@ -12,6 +12,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/analysis
       - SPRING_DATASOURCE_USERNAME
       - SPRING_DATASOURCE_PASSWORD
+      - SPRING_PROFILES_ACTIVE=prod
       - OCR_URL=http://ocr:5000/
       - HOST=receipt.modalstudio.com
       - BASEPATH=/api
