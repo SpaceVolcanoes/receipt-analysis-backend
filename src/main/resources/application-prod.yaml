@@ -1,0 +1,9 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans,heapdump,logfile,loggers,threaddump,shutdown"
+    jmx:
+      exposure:
+        exclude: "*"
