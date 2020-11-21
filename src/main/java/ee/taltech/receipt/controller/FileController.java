@@ -4,6 +4,7 @@ import ee.taltech.receipt.exception.StorageFileNotFoundException;
 import ee.taltech.receipt.service.StorageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FileController {
 
+    private final Logger logger;
     private final StorageService storageService;
 
     @GetMapping()
@@ -52,6 +54,7 @@ public class FileController {
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exception) {
+        logger.warn(exception.getMessage(), exception);
         return ResponseEntity.notFound().build();
     }
 

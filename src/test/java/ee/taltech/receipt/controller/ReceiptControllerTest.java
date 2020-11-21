@@ -8,12 +8,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,6 +27,9 @@ class ReceiptControllerTest {
 
     @Mock
     private ReceiptService service;
+
+    @Mock
+    private Logger logger;
 
     @InjectMocks
     private ReceiptController controller;
@@ -45,6 +52,7 @@ class ReceiptControllerTest {
 
         assertThat(response.getStatusCodeValue()).isEqualTo(503);
         assertThat(response.getHeaders()).containsEntry("Retry-After", singletonList("10"));
+        verify(logger).error(any(), any(StorageException.class));
     }
 
     @Test
@@ -54,6 +62,7 @@ class ReceiptControllerTest {
         ResponseEntity<?> response = controller.create(FILE);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(415);
+        verify(logger).warn(any(), any(IllegalArgumentException.class));
     }
 
     @Test
@@ -63,6 +72,7 @@ class ReceiptControllerTest {
         ResponseEntity<?> response = controller.create(FILE);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(403);
+        verify(logger).warn(any(), any(IllegalStateException.class));
     }
 
     @Test
