@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,24 +45,13 @@ public class ArtCollector {
     // I keep all my paintings, never throw anything away. Just buy bigger house.
     // How much do you want for this system?
 
-    @PutMapping("pageSize")
-    @ApiOperation(
-        value = "Update the page size, default value is 50"
-    )
-    @ApiResponse(code = SC_OK, message = "Page size updated")
-    void updatePageSize(
-        @RequestParam(value = "size", required = true) Long size
-    ) {
-
-    }
-
-    @GetMapping("page/{id}")
+    @GetMapping("page/{pageNr}")
     @ApiOperation(
         value = "List paintings on a page",
         produces = "application/json"
     )
     @ApiResponse(code = SC_OK, message = "Page found")
-    List<Painting> getPage(@PathVariable Long id) {
+    List<Painting> getPage(@PathVariable Long pageNr, @RequestParam(value = "pageSize", required = false, defaultValue = "50") int pageSize) {
         return List.of();
     }
 
