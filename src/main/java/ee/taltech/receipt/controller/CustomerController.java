@@ -23,7 +23,7 @@ public class CustomerController {
 
     private final ReceiptService receiptService;
 
-    @GetMapping({"{id}/receipts", "{id}/receipts2"})
+    @GetMapping("{id}/receipts")
     @ApiResponses({
         @ApiResponse(
             code = HttpServletResponse.SC_OK,

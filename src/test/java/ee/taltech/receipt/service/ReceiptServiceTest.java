@@ -1,11 +1,14 @@
 package ee.taltech.receipt.service;
 
+import ee.taltech.receipt.dto.Base64File;
 import ee.taltech.receipt.model.Customer;
+import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.ReceiptRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,13 +17,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +40,15 @@ class ReceiptServiceTest {
 
     @Mock
     private ReceiptRepository repository;
+
+    @Mock
+    private CustomerService customerService;
+
+    @Mock
+    private EntryService entryService;
+
+    @Mock
+    private OcrService ocrService;
 
     @InjectMocks
     private ReceiptService service;
@@ -123,6 +138,42 @@ class ReceiptServiceTest {
         assertThat(actual.getCreatedAt()).isEqualTo(Timestamp.valueOf("2020-09-13 11:00:00"));
         assertThat(actual.getIssuedAt()).isEqualTo(Timestamp.valueOf("2020-09-15 11:00:00"));
         assertThat(actual.getModifiedAt()).isAfter(Date.from(Instant.parse("2020-09-19T11:00:00.000Z")));
+    }
+
+    @Test
+    void createAddsEntriesIfIdentified() {
+        Base64File file = new Base64File();
+
+        when(fileService.store(file)).thenReturn("temp.png");
+        when(ocrService.identify("temp.png")).thenReturn(asList("first", "second"));
+        when(repository.save(any(Receipt.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        service.create(file);
+
+        ArgumentCaptor<Entry> captor = ArgumentCaptor.forClass(Entry.class);
+
+        verify(entryService, times(2)).create(captor.capture());
+
+        List<Entry> entries = captor.getAllValues();
+
+        assertThat(entries.get(0).getName()).isEqualTo("first");
+        assertThat(entries.get(0).getReceipt().getFileName()).isEqualTo("temp.png");
+
+        assertThat(entries.get(1).getName()).isEqualTo("second");
+        assertThat(entries.get(1).getReceipt().getFileName()).isEqualTo("temp.png");
+    }
+
+    @Test
+    void getAllCustomerReceiptsDelegatesToCustomerService() {
+        Receipt first = new Receipt();
+        Receipt second = new Receipt();
+        Customer given = new Customer().setReceipts(asList(first, second));
+
+        when(customerService.findById(3L)).thenReturn(given);
+
+        List<Receipt> actual = service.getAllCustomerReceipts(3L);
+
+        assertThat(actual).containsExactly(first, second);
     }
 
 }

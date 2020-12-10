@@ -38,12 +38,12 @@ import static java.lang.Integer.parseInt;
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
-    private final Environment environment;
+    private final String limit;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties, Environment environment) {
         this.rootLocation = Paths.get(properties.getLocation());
-        this.environment = environment;
+        this.limit = environment.getProperty("FILE_LIMIT");
     }
 
     public boolean isImage(MultipartFile file) {
@@ -89,7 +89,6 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("File is missing a name");
         }
 
-        String limit = environment.getProperty("FILE_LIMIT");
         if (limit != null && parseInt(limit) <= loadAll().count()) {
             throw new IllegalStateException(
                 "Service has reached its current capacity, "
