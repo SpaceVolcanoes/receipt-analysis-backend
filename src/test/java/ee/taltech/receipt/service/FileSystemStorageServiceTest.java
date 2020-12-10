@@ -70,7 +70,11 @@ class FileSystemStorageServiceTest implements FileAwareTest {
 
     @Test
     public void storeThrowsWhenLimitExceeded() {
+        Environment environment = mock(Environment.class);
         when(environment.getProperty("FILE_LIMIT")).thenReturn("0");
+
+        FileSystemStorageService service = new FileSystemStorageService(properties, environment);
+        service.init();
 
         MultipartFile file = new MockMultipartFile("foo", "foo.txt", TEXT_PLAIN_VALUE, TEXT_CONTENT);
 

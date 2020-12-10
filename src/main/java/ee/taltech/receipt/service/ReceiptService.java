@@ -2,6 +2,7 @@ package ee.taltech.receipt.service;
 
 import ee.taltech.receipt.dto.Base64File;
 import ee.taltech.receipt.model.Customer;
+import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.ReceiptRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ public class ReceiptService {
     private final FileSystemStorageService fileService;
     private final CustomerService customerService;
     private final ReceiptRepository repository;
+    private final EntryService entryService;
+    private final OcrService ocrService;
 
     public Receipt create(Base64File base64) {
         String name = fileService.store(base64);
@@ -40,7 +43,13 @@ public class ReceiptService {
             .setIssuedAt(Timestamp.from(Instant.now()))
             .setFileName(fileName);
 
-        return repository.save(receipt);
+        Receipt saved = repository.save(receipt);
+
+        for (String text : ocrService.identify(fileName)) {
+            entryService.create(new Entry().setName(text).setReceipt(saved));
+        }
+
+        return saved;
     }
 
     public Long getAmount() {
