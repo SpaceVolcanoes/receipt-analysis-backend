@@ -3,6 +3,7 @@ HELP.md
 build/
 h2
 logs
+work
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
