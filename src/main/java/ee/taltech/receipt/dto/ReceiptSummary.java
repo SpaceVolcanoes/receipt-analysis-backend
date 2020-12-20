@@ -37,7 +37,7 @@ public class ReceiptSummary {
 
     private Double calculateTotalCostOfEntries(List<Entry> entries) {
         return entries.stream()
-            .mapToDouble(Entry::getCost)
+            .mapToDouble(e -> e.getCost() == null ? 0 : e.getCost())
             .sum();
     }
 

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -35,7 +34,8 @@ class ReceiptSummaryTest {
         List<Entry> entries2 = List.of(
             new Entry().setName("Muna").setCost(2.99).setReceipt(receipt2),
             new Entry().setName("Vesi").setCost(0.99).setReceipt(receipt2),
-            new Entry().setName("Kana").setCost(3.35).setReceipt(receipt2)
+            new Entry().setName("Kana").setCost(3.35).setReceipt(receipt2),
+            new Entry().setName("Sus").setReceipt(receipt2)
         );
 
 	    receipt1 = new Receipt().setCustomer(new Customer()).setEntries(entries1);
@@ -70,7 +70,7 @@ class ReceiptSummaryTest {
     @Test
     void testNumberOfEntries() {
         assertThat(receiptSummary1.getNumberOfEntries()).isEqualTo(5);
-        assertThat(receiptSummary2.getNumberOfEntries()).isEqualTo(3);
+        assertThat(receiptSummary2.getNumberOfEntries()).isEqualTo(4);
     }
 
     @Test
