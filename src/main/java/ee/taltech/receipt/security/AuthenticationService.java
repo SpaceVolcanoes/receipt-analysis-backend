@@ -15,17 +15,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginResponse login(LoginDto login) {
-        if (isBlank(login.getUsername())) {
+    public LoginResponse login(LoginDto credentials) {
+        if (isBlank(credentials.getUsername())) {
             throw new IllegalArgumentException("Missing username");
         }
-        if (isBlank(login.getPassword())) {
+        if (isBlank(credentials.getPassword())) {
             throw new IllegalArgumentException("Missing password");
         }
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-            login.getUsername(),
-            login.getPassword()
+            credentials.getUsername(),
+            credentials.getPassword()
         ));
         SessionUser user = (SessionUser) authentication.getPrincipal();
         String token = jwtTokenProvider.generateToken(user);
