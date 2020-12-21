@@ -63,7 +63,7 @@ class ReceiptServiceTest {
     void createThrowsIfFileNotImage() {
         when(fileService.isImage(FILE)).thenReturn(false);
 
-        Throwable thrown = catchThrowable(() -> service.create(FILE));
+        Throwable thrown = catchThrowable(() -> service.create(FILE, 1L));
 
         assertThat(thrown)
             .isInstanceOf(IllegalArgumentException.class)
@@ -76,7 +76,7 @@ class ReceiptServiceTest {
         when(fileService.store(FILE)).thenReturn("receipt.png");
         when(repository.save(any(Receipt.class))).then(AdditionalAnswers.returnsFirstArg());
 
-        Receipt receipt = service.create(FILE);
+        Receipt receipt = service.create(FILE, 1L);
 
         assertThat(receipt.getFileName()).isEqualTo("receipt.png");
     }
@@ -148,7 +148,7 @@ class ReceiptServiceTest {
         when(ocrService.identify("temp.png")).thenReturn(asList("first", "second"));
         when(repository.save(any(Receipt.class))).then(AdditionalAnswers.returnsFirstArg());
 
-        service.create(file);
+        service.create(file, 1L);
 
         ArgumentCaptor<Entry> captor = ArgumentCaptor.forClass(Entry.class);
 

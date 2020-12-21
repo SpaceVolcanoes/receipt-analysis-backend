@@ -18,28 +18,29 @@ import java.util.List;
 @AllArgsConstructor
 public class ReceiptService {
 
+
     private final FileSystemStorageService fileService;
     private final CustomerService customerService;
     private final ReceiptRepository repository;
     private final EntryService entryService;
     private final OcrService ocrService;
 
-    public Receipt create(Base64File base64) {
+    public Receipt create(Base64File base64, Long customerId) {
         String name = fileService.store(base64);
-        return create(name);
+        return create(name, customerId);
     }
 
-    public Receipt create(MultipartFile file) {
+    public Receipt create(MultipartFile file, Long customerId) {
         if (!fileService.isImage(file)) {
             throw new IllegalArgumentException("Receipt file must be an image");
         }
         String name = fileService.store(file);
-        return create(name);
+        return create(name, customerId);
     }
 
-    private Receipt create(String fileName) {
+    private Receipt create(String fileName, Long customerId) {
         Receipt receipt = new Receipt()
-            .setCustomer(new Customer().setId(1L))
+            .setCustomer(new Customer().setId(customerId))
             .setIssuedAt(Timestamp.from(Instant.now()))
             .setFileName(fileName);
 

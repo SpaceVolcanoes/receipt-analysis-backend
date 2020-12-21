@@ -1,6 +1,7 @@
 package ee.taltech.receipt.controller;
 
 import ee.taltech.receipt.exception.StorageFileNotFoundException;
+import ee.taltech.receipt.security.Role;
 import ee.taltech.receipt.service.StorageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class FileController {
     private final Logger logger;
     private final StorageService storageService;
 
+    @Role.Admin
     @GetMapping()
     @ApiOperation(
         value = "List uploaded files",

@@ -3,6 +3,8 @@ package ee.taltech.receipt.controller;
 import ee.taltech.receipt.dto.Base64File;
 import ee.taltech.receipt.exception.StorageException;
 import ee.taltech.receipt.model.Receipt;
+import ee.taltech.receipt.security.SessionUser;
+import ee.taltech.receipt.security.UserSessionService;
 import ee.taltech.receipt.service.ReceiptService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,13 +29,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RequestMapping("receipts")
 @RestController
 @AllArgsConstructor
 public class ReceiptController {
 
     private final Logger logger;
-    private final ReceiptService service;
+    private final ReceiptService receiptService;
+    private final UserSessionService sessionService;
 
     @PostMapping()
     @ApiOperation(
@@ -104,8 +109,8 @@ public class ReceiptController {
     })
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            Receipt receipt = service.findById(id);
-            service.delete(receipt);
+            Receipt receipt = receiptService.findById(id);
+            receiptService.delete(receipt);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.notFound().build();
@@ -125,7 +130,7 @@ public class ReceiptController {
     })
     public ResponseEntity<?> getReceipt(@PathVariable Long id) {
         try {
-            Receipt receipt = service.findById(id);
+            Receipt receipt = receiptService.findById(id);
             return new ResponseEntity<>(receipt, HttpStatus.OK);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.notFound().build();
@@ -145,7 +150,7 @@ public class ReceiptController {
     })
     public ResponseEntity<?> updateReceipt(@RequestBody Receipt receipt, @PathVariable Long id) {
         try {
-            Receipt updated = service.update(receipt, id);
+            Receipt updated = receiptService.update(receipt, id);
             return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
@@ -157,11 +162,17 @@ public class ReceiptController {
      */
     private <T> ResponseEntity<?> createReceipt(T file) {
         try {
+            SessionUser user = sessionService.getUser();
+            Long customerId = 1L; // TODO: remove hardcoded fallback once the endpoint is restricted to logged in users
+            if (user != null) {
+                customerId = user.getId();
+            }
+
             if (file instanceof Base64File) {
-                return new ResponseEntity<>(service.create((Base64File) file).getId(), HttpStatus.CREATED);
+                return new ResponseEntity<>(receiptService.create((Base64File) file, customerId).getId(), CREATED);
             }
             if (file instanceof MultipartFile) {
-                return new ResponseEntity<>(service.create((MultipartFile) file).getId(), HttpStatus.CREATED);
+                return new ResponseEntity<>(receiptService.create((MultipartFile) file, customerId).getId(), CREATED);
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (StorageException exception) {
