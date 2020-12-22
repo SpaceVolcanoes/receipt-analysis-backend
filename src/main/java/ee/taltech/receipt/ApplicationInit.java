@@ -6,8 +6,10 @@ import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.repository.CustomerRepository;
 import ee.taltech.receipt.repository.EntryRepository;
 import ee.taltech.receipt.repository.ReceiptRepository;
+import ee.taltech.receipt.security.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import static java.util.Arrays.asList;
@@ -19,11 +21,24 @@ public class ApplicationInit implements CommandLineRunner {
     private final CustomerRepository customerRepository;
     private final ReceiptRepository receiptRepository;
     private final EntryRepository entryRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
-        Customer krissu = customerRepository.save(new Customer().setName("Krissu"));
-        Customer mart = customerRepository.save(new Customer().setName("Mart"));
+        Customer krissu = new Customer()
+            .setName("Krissu")
+            .setEmail("krissu@ttu.ee")
+            .setRole(Role.USER)
+            .setPassword(passwordEncoder.encode("krissu"));
+
+        Customer mart = new Customer()
+            .setName("Mart")
+            .setEmail("mart@ttu.ee")
+            .setRole(Role.ADMIN)
+            .setPassword(passwordEncoder.encode("mart"));
+
+        krissu = customerRepository.save(krissu);
+        mart = customerRepository.save(mart);
 
         Receipt maxima = receiptRepository.save(new Receipt().setCustomer(krissu).setIssuer("Maxima"));
         Receipt coop = receiptRepository.save(new Receipt().setCustomer(krissu).setIssuer("Coop"));
