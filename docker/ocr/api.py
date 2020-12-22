@@ -49,7 +49,7 @@ def home():
     file.save(FILEPATH + filename)
 
     img = cv2.imread(FILEPATH + filename, 0)
-    ret, img = cv2.threshold(img, 210, 255, cv2.THRESH_BINARY)
+    ret, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     extracted_text = pytesseract.image_to_string(img, lang=request.args['lang'])
 
