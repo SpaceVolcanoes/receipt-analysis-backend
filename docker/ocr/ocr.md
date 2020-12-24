@@ -18,6 +18,6 @@ docker logout
 
 ### Update in production env
 ```
-docker pull receiptanalysis/backend
+docker pull receiptanalysis/ocr
 docker stop analysis-ocr && docker rm analysis-ocr && docker-compose -f docker-compose.backend.yml up -d ocr
 ```
