@@ -1,6 +1,7 @@
 package ee.taltech.receipt.controller;
 
 import ee.taltech.receipt.dto.ReceiptSummary;
+import ee.taltech.receipt.security.Role;
 import ee.taltech.receipt.service.ReceiptService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -23,6 +24,7 @@ public class CustomerController {
 
     private final ReceiptService receiptService;
 
+    @Role.User
     @GetMapping("{id}/receipts")
     @ApiResponses({
         @ApiResponse(
