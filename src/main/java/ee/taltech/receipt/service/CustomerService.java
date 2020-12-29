@@ -19,7 +19,7 @@ public class CustomerService {
         }
         if (repository.findAllByEmail(customer.getEmail()).size() > 0) {
             throw new IllegalArgumentException("Attempting to create a Customer with an existing email: " + customer.getEmail());
-       }
+        }
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         return repository.save(customer);
     }
