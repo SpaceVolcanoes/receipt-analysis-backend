@@ -3,6 +3,7 @@ package ee.taltech.receipt.controller;
 import ee.taltech.receipt.dto.Base64File;
 import ee.taltech.receipt.exception.StorageException;
 import ee.taltech.receipt.model.Receipt;
+import ee.taltech.receipt.security.Role;
 import ee.taltech.receipt.security.SessionUser;
 import ee.taltech.receipt.security.UserSessionService;
 import ee.taltech.receipt.service.ReceiptService;
@@ -40,6 +41,7 @@ public class ReceiptController {
     private final ReceiptService receiptService;
     private final UserSessionService sessionService;
 
+    @Role.User
     @PostMapping()
     @ApiOperation(
         value = "Create a Receipt from an image file",
@@ -72,6 +74,7 @@ public class ReceiptController {
         return createReceipt(file);
     }
 
+    @Role.User
     @PostMapping("/base64")
     @ApiOperation(
         value = "Create a Receipt from a base64 image file",
@@ -163,16 +166,12 @@ public class ReceiptController {
     private <T> ResponseEntity<?> createReceipt(T file) {
         try {
             SessionUser user = sessionService.getUser();
-            Long customerId = 1L; // TODO: remove hardcoded fallback once the endpoint is restricted to logged in users
-            if (user != null) {
-                customerId = user.getId();
-            }
 
             if (file instanceof Base64File) {
-                return new ResponseEntity<>(receiptService.create((Base64File) file, customerId).getId(), CREATED);
+                return new ResponseEntity<>(receiptService.create((Base64File) file, user.getId()).getId(), CREATED);
             }
             if (file instanceof MultipartFile) {
-                return new ResponseEntity<>(receiptService.create((MultipartFile) file, customerId).getId(), CREATED);
+                return new ResponseEntity<>(receiptService.create((MultipartFile) file, user.getId()).getId(), CREATED);
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (StorageException exception) {

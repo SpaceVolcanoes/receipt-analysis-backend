@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,7 +32,7 @@ class ReceiptControllerTest {
     @Mock
     private Logger logger;
 
-    @Mock
+    @Mock(answer = RETURNS_DEEP_STUBS)
     private UserSessionService sessionService;
 
     @InjectMocks
@@ -40,6 +41,7 @@ class ReceiptControllerTest {
     @Test
     void createReturnsIdFromService() {
         when(receiptService.create(FILE, 1L)).thenReturn(new Receipt().setId(3L));
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -50,6 +52,7 @@ class ReceiptControllerTest {
     @Test
     void createReturnsRetryIfStoringFailed() {
         when(receiptService.create(FILE, 1L)).thenThrow(StorageException.class);
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -61,6 +64,7 @@ class ReceiptControllerTest {
     @Test
     void createReturnsUnsupportedIfWrongFileType() {
         when(receiptService.create(FILE, 1L)).thenThrow(IllegalArgumentException.class);
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -71,6 +75,7 @@ class ReceiptControllerTest {
     @Test
     void createReturnsForbiddenIfIllegalState() {
         when(receiptService.create(FILE, 1L)).thenThrow(IllegalStateException.class);
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
