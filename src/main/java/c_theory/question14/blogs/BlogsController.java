@@ -23,7 +23,7 @@ public class BlogsController {
 
     //todo D create a method to save a new blog
 
-    //todo E create a method to update a bog
+    //todo E create a method to update a blog
 
     //todo F create a method to delete a blog
 

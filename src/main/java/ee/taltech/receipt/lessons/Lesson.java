@@ -1,8 +1,13 @@
-package c_theory.question14.lessons;
+package ee.taltech.receipt.lessons;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.util.List;
 
+@Getter
+@Setter
 public class Lesson {
 
     private String name;
