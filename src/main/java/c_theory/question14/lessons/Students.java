@@ -1,4 +1,4 @@
-package ee.taltech.receipt.lessons;
+package c_theory.question14.lessons;
 
 import lombok.Getter;
 import lombok.Setter;

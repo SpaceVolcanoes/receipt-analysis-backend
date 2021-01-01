@@ -1,4 +1,4 @@
-package ee.taltech.receipt.lessons;
+package c_theory.question14.lessons;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
