@@ -1,6 +1,8 @@
 spring:
   jackson:
     default-property-inclusion: non_null
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
   jpa:
     properties:
       hibernate:
