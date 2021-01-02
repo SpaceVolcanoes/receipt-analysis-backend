@@ -3,7 +3,6 @@ package ee.taltech.receipt.security;
 import ee.taltech.receipt.model.Customer;
 import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
-import ee.taltech.receipt.service.CustomerService;
 import ee.taltech.receipt.service.EntryService;
 import ee.taltech.receipt.service.ReceiptService;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,9 +38,6 @@ public class ResourceFilterTest {
     private UserSessionService userSessionService;
 
     @Mock
-    private CustomerService customerService;
-
-    @Mock
     private EntryService entryService;
 
     @Mock
@@ -60,11 +56,10 @@ public class ResourceFilterTest {
     }
 
     @Test
-    void doFilterThrowsErrorIfEmailMismatch() throws IOException, ServletException {
-        when(user.getUsername()).thenReturn("mart@ttu.ee");
+    void doFilterThrowsErrorIfIdsMismatch() throws IOException, ServletException {
+        when(user.getId()).thenReturn(2L);
         when(user.getRole()).thenReturn(Role.USER);
         when(request.getRequestURI()).thenReturn("/customers/1/receipts");
-        when(customerService.findById(1L)).thenReturn(new Customer().setEmail("krissu@ttu.ee"));
 
         Throwable thrown = catchThrowable(() -> filter.doFilter(request, response, chain));
         assertThat(thrown)
@@ -73,13 +68,14 @@ public class ResourceFilterTest {
     }
 
     @Test
-    void doFilterPassesIfEmailsMatch() throws IOException, ServletException {
-        when(user.getUsername()).thenReturn("mart@ttu.ee");
+    void doFilterPassesIfIdsMatch() throws IOException, ServletException {
+        when(user.getId()).thenReturn(5L);
+        when(user.getRole()).thenReturn(Role.USER);
         when(request.getRequestURI()).thenReturn("/entries/8");
         when(entryService.findById(8L)).thenReturn(
             new Entry().setReceipt(
                 new Receipt().setCustomer(
-                    new Customer().setEmail("mart@ttu.ee")
+                    new Customer().setId(5L)
                 )
             )
         );
@@ -90,14 +86,7 @@ public class ResourceFilterTest {
 
     @Test
     void doFilterPassesIfUserIsAdmin() throws IOException, ServletException {
-        when(user.getUsername()).thenReturn("mart@ttu.ee");
         when(user.getRole()).thenReturn(Role.ADMIN);
-        when(request.getRequestURI()).thenReturn("/receipts/5");
-        when(receiptService.findById(5L)).thenReturn(
-            new Receipt().setCustomer(
-                new Customer().setEmail("krissu@ttu.ee")
-            )
-        );
 
         filter.doFilter(request, response, chain);
         verify(chain).doFilter(request, response);

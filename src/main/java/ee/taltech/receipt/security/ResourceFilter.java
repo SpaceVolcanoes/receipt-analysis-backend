@@ -32,29 +32,34 @@ public class ResourceFilter implements Filter {
         FilterChain chain
     ) throws IOException, ServletException {
         SessionUser user = userSessionService.getUser();
-        String userName = user.getUsername();
+        if (user.getRole().equals(Role.ADMIN)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        Long userId = user.getId();
 
         String[] uri = ((HttpServletRequest) request).getRequestURI().split("/");
-        String resourceOwner = getResourceOwner(uri[2], uri[1]);
+        Long resourceOwner = getResourceOwnerId(uri[2], uri[1]);
 
-        if (!resourceOwner.equals(userName) && !user.getRole().equals(Role.ADMIN)) {
-            throw new AccessDeniedException("Access to " + uri[1] + " " + uri[2] + " denied");
+        if (resourceOwner.equals(userId)) {
+            chain.doFilter(request, response);
+            return;
         }
-        chain.doFilter(request, response);
+        throw new AccessDeniedException("Access to " + uri[1] + " " + uri[2] + " denied");
     }
 
-    private String getResourceOwner(String resourceId, String resourceType) throws AccessDeniedException {
+    private Long getResourceOwnerId(String resourceId, String resourceType) throws AccessDeniedException {
         if (resourceType.equals("customers")) {
-            return customerService.findById(Long.parseLong(resourceId)).getEmail();
+            return Long.parseLong(resourceId);
         }
         if (resourceType.equals("entries")) {
-            return entryService.findById(Long.parseLong(resourceId)).getReceipt().getCustomer().getEmail();
+            return entryService.findById(Long.parseLong(resourceId)).getReceipt().getCustomer().getId();
         }
         if (resourceType.equals("files")) {
-            return receiptService.findByFilename(resourceId).getCustomer().getEmail();
+            return receiptService.findByFilename(resourceId).getCustomer().getId();
         }
         if (resourceType.equals("receipts")) {
-            return receiptService.findById(Long.parseLong(resourceId)).getCustomer().getEmail();
+            return receiptService.findById(Long.parseLong(resourceId)).getCustomer().getId();
         }
         throw new AccessDeniedException("Unable to parse resource");
     }
