@@ -56,6 +56,6 @@ public class ResourceFilter implements Filter {
         if (resourceType.equals("receipts")) {
             return receiptService.findById(Long.parseLong(resourceId)).getCustomer().getEmail();
         }
-        throw new AccessDeniedException("Access to " + resourceType + " " + resourceId + " denied");
+        throw new AccessDeniedException("Unable to parse resource");
     }
 }
