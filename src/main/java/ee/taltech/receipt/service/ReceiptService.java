@@ -80,4 +80,8 @@ public class ReceiptService {
         return customerService.findById(customerId).getReceipts();
     }
 
+    public void removeFile(String filename) {
+        repository.removeFile(filename);
+    }
+
 }
