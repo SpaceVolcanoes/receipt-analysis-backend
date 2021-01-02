@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
 
     @Modifying
-    @Query("UPDATE Receipt r SET r.fileName = null WHERE r.fileName = :filename")
+    @Query("UPDATE Receipt SET fileName = null WHERE fileName = :filename")
     void removeFile(@Param("filename") String filename);
 
 }
