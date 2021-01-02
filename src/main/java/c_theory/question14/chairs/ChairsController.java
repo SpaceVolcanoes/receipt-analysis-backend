@@ -1,5 +1,22 @@
 package c_theory.question14.chairs;
 
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RequestMapping("chairs")
+@RestController
 public class ChairsController {
 
     //todo for question 14 there are 4 assignments in total
@@ -16,29 +33,60 @@ public class ChairsController {
     // Method body is not important and will not be graded.
     // Modifying other classes is unnecessary and will not be graded.
 
-    //todo A add necessary annotations on the class
+    // add necessary annotations on the class
 
-    //todo B create a method to query chairs (plural)
+    // B create a method to query chairs (plural)
+    @GetMapping("")
+    public ResponseEntity<?> getChairs(
+        @RequestParam(defaultValue = "") String type,
+        @RequestParam(defaultValue = "") Boolean inStock,
+        @RequestParam(defaultValue = "") Boolean orderByPriceAscending
+    ) {
+        return new ResponseEntity<>(List.of(), HttpStatus.OK);
+    }
 
-    //todo C create a method to query single chair
+    // C create a method to query single chair
+    @GetMapping("{id}")
+    public ResponseEntity<?> getChair(@PathVariable Long id) {
+        return new ResponseEntity<>(new Chair(), HttpStatus.OK);
+    }
 
-    //todo D create a method to save a chair
+    // D create a method to save a chair
+    @PostMapping("")
+    public ResponseEntity<?> addChair(@RequestBody Chair chair) {
+        return new ResponseEntity<>(chair, HttpStatus.OK);
+    }
 
-    //todo E create a method to update a chair
+    // E create a method to update a chair
+    @PutMapping("{id}")
+    public ResponseEntity<?> updateChair(@RequestBody Chair chair, @PathVariable Long id) {
+        return new ResponseEntity<>(chair, HttpStatus.OK);
+    }
 
-    //todo F create a method to delete a chair
+    // F create a method to delete a chair
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteChair(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
+    }
 
-    //todo G assuming each chair has a designer (one-to-one relation) create a method to query chair's designer
+    // G assuming each chair has a designer (one-to-one relation) create a method to query chair's designer
+    @GetMapping("{id}/designer")
+    public ResponseEntity<?> getDesigner(@PathVariable Long id) {
+        return new ResponseEntity<>(new Designer(), HttpStatus.OK);
+    }
 
-    //todo H create a method to update chair's name (and nothing else)
+    // H create a method to update chair's name (and nothing else)
+    @PutMapping("{id}/name")
+    public ResponseEntity<?> updateName(@PathVariable Long id, @RequestParam(defaultValue = "") String name) {
+        return new ResponseEntity<>(new Chair(), HttpStatus.OK);
+    }
 
-    //todo I modify correct method to support searching chairs by type while keeping original functionality
+    // I modify correct method to support searching chairs by type while keeping original functionality
 
-    //todo J modify correct method to support searching chairs by whether chair is in stock while keeping original functionality
+    // J modify correct method to support searching chairs by whether chair is in stock while keeping original functionality
 
-    //todo K modify correct method to order/sort chairs
+    // K modify correct method to order/sort chairs
     // * by lowest priced first
     // * by highest priced first
     // (you can assume that by default it searches most popular first)
-
 }
