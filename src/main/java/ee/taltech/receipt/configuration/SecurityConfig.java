@@ -4,7 +4,6 @@ import ee.taltech.receipt.security.JwtRequestFilter;
 import ee.taltech.receipt.security.ResourceFilter;
 import ee.taltech.receipt.security.UserSessionService;
 import ee.taltech.receipt.security.RestAuthenticationEntryPoint;
-import ee.taltech.receipt.service.CustomerService;
 import ee.taltech.receipt.service.EntryService;
 import ee.taltech.receipt.service.ReceiptService;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtRequestFilter jwtRequestFilter;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final UserSessionService userSessionService;
-    private final CustomerService customerService;
     private final EntryService entryService;
     private final ReceiptService receiptService;
 
@@ -80,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FilterRegistrationBean<ResourceFilter> resourceFilter(){
         FilterRegistrationBean<ResourceFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new ResourceFilter(userSessionService, customerService, entryService, receiptService));
+        registrationBean.setFilter(new ResourceFilter(userSessionService, entryService, receiptService));
         registrationBean.addUrlPatterns("/customers/*");
         registrationBean.addUrlPatterns("/entries/*");
         registrationBean.addUrlPatterns("/files/*");

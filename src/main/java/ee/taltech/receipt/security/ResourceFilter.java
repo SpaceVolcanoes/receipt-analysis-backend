@@ -1,6 +1,5 @@
 package ee.taltech.receipt.security;
 
-import ee.taltech.receipt.service.CustomerService;
 import ee.taltech.receipt.service.EntryService;
 import ee.taltech.receipt.service.ReceiptService;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ import java.nio.file.AccessDeniedException;
 public class ResourceFilter implements Filter {
 
     private final UserSessionService userSessionService;
-    private final CustomerService customerService;
     private final EntryService entryService;
     private final ReceiptService receiptService;
 
@@ -36,9 +34,13 @@ public class ResourceFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        Long userId = user.getId();
-
         String[] uri = ((HttpServletRequest) request).getRequestURI().split("/");
+        if (uri.length < 3) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        Long userId = user.getId();
         Long resourceOwner = getResourceOwnerId(uri[2], uri[1]);
 
         if (resourceOwner.equals(userId)) {
