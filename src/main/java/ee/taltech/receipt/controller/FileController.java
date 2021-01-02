@@ -39,6 +39,7 @@ public class FileController {
             .collect(Collectors.toList());
     }
 
+    @Role.User
     @SuppressWarnings("ConstantConditions")
     @GetMapping("{filename}")
     @ApiOperation(

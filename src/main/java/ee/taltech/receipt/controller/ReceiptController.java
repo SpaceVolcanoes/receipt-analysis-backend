@@ -99,6 +99,7 @@ public class ReceiptController {
         return createReceipt(file);
     }
 
+    @Role.User
     @DeleteMapping("{id}")
     @ApiResponses({
         @ApiResponse(
@@ -120,6 +121,7 @@ public class ReceiptController {
         }
     }
 
+    @Role.User
     @GetMapping("{id}")
     @ApiResponses({
         @ApiResponse(
@@ -140,6 +142,7 @@ public class ReceiptController {
         }
     }
 
+    @Role.User
     @PutMapping("{id}")
     @ApiResponses({
         @ApiResponse(

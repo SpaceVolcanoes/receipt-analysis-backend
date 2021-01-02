@@ -1,6 +1,7 @@
 package ee.taltech.receipt.controller;
 
 import ee.taltech.receipt.dto.GeneralStatistics;
+import ee.taltech.receipt.security.Role;
 import ee.taltech.receipt.service.StatisticsService;
 import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class StatisticsController {
 
     private final StatisticsService service;
 
+    @Role.Guest
     @GetMapping()
     @ApiResponse(
         code = HttpServletResponse.SC_OK,
