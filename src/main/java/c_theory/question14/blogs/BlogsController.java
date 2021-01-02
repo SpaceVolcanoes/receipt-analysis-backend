@@ -1,7 +1,5 @@
 package c_theory.question14.blogs;
 
-import c_theory.question14.blogs.Author;
-import c_theory.question14.blogs.Blog;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
