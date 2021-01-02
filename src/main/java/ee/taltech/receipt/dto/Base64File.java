@@ -12,13 +12,13 @@ import static java.net.URLDecoder.decode;
 
 @Getter
 @Setter
-@ApiModel
+@ApiModel(value = "File", description = "Data describing a file")
 public class Base64File {
 
-    @ApiModelProperty(required = true, example = "data:image/png;base64")
+    @ApiModelProperty(example = "data:image/png;base64")
     private String type;
 
-    @ApiModelProperty(required = true, example = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=")
+    @ApiModelProperty(example = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=")
     private String data;
 
     public String getExtension() {
