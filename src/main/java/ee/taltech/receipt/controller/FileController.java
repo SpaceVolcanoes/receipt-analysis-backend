@@ -75,8 +75,8 @@ public class FileController {
         ),
     })
     public ResponseEntity<?> delete(@PathVariable String filename) {
-        storageService.deleteByFileName(filename);
         receiptService.removeFile(filename);
+        storageService.deleteByFileName(filename);
         return ResponseEntity.ok().build();
     }
 
