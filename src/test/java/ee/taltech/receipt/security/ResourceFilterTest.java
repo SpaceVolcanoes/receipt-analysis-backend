@@ -1,10 +1,10 @@
 package ee.taltech.receipt.security;
 
+import ee.taltech.receipt.exception.ResourceAccessDeniedException;
 import ee.taltech.receipt.model.Customer;
 import ee.taltech.receipt.model.Entry;
 import ee.taltech.receipt.model.Receipt;
 import ee.taltech.receipt.service.EntryService;
-import ee.taltech.receipt.service.ReceiptService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -40,9 +39,6 @@ public class ResourceFilterTest {
     @Mock
     private EntryService entryService;
 
-    @Mock
-    private ReceiptService receiptService;
-
     @InjectMocks
     private ResourceFilter filter;
 
@@ -63,7 +59,7 @@ public class ResourceFilterTest {
 
         Throwable thrown = catchThrowable(() -> filter.doFilter(request, response, chain));
         assertThat(thrown)
-            .isInstanceOf(AccessDeniedException.class)
+            .isInstanceOf(ResourceAccessDeniedException.class)
             .hasMessage("Access to customers 1 denied");
     }
 
