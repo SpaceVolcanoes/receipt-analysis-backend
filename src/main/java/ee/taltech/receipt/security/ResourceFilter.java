@@ -1,5 +1,6 @@
 package ee.taltech.receipt.security;
 
+import ee.taltech.receipt.exception.ResourceAccessDeniedException;
 import ee.taltech.receipt.service.EntryService;
 import ee.taltech.receipt.service.ReceiptService;
 import lombok.AllArgsConstructor;
@@ -47,7 +48,7 @@ public class ResourceFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        throw new AccessDeniedException("Access to " + uri[1] + " " + uri[2] + " denied");
+        throw new ResourceAccessDeniedException("Access to " + uri[1] + " " + uri[2] + " denied");
     }
 
     private Long getResourceOwnerId(String resourceId, String resourceType) throws AccessDeniedException {
@@ -63,6 +64,6 @@ public class ResourceFilter implements Filter {
         if (resourceType.equals("receipts")) {
             return receiptService.findById(Long.parseLong(resourceId)).getCustomer().getId();
         }
-        throw new AccessDeniedException("Unable to parse resource");
+        throw new ResourceAccessDeniedException("Unable to parse resource");
     }
 }
