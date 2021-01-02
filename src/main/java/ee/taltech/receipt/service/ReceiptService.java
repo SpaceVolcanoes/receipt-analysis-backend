@@ -65,6 +65,10 @@ public class ReceiptService {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No Receipt with ID " + id));
     }
 
+    public Receipt findByFilename(String filename) {
+        return repository.findAllByFileName(filename).orElseThrow(() -> new IllegalArgumentException("No receipt with filename " + filename));
+    }
+
     @Transactional
     public Receipt update(Receipt updated, Long id) {
         Receipt old = findById(id);
