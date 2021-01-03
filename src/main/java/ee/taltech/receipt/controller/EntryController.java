@@ -2,6 +2,7 @@ package ee.taltech.receipt.controller;
 
 import ee.taltech.receipt.dto.EntrySummary;
 import ee.taltech.receipt.model.Entry;
+import ee.taltech.receipt.security.Role;
 import ee.taltech.receipt.service.EntryService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -28,6 +29,7 @@ public class EntryController {
 
     private final EntryService entryService;
 
+    @Role.User
     @PostMapping()
     @ApiResponses({
         @ApiResponse(
@@ -48,6 +50,7 @@ public class EntryController {
         }
     }
 
+    @Role.User
     @DeleteMapping("{id}")
     @ApiResponses({
         @ApiResponse(
@@ -60,6 +63,7 @@ public class EntryController {
         return ResponseEntity.ok().build();
     }
 
+    @Role.User
     @GetMapping("{id}")
     @ApiResponses({
         @ApiResponse(
@@ -80,6 +84,7 @@ public class EntryController {
         }
     }
 
+    @Role.User
     @GetMapping("{id}/similar")
     @ApiResponses({
         @ApiResponse(
@@ -103,6 +108,7 @@ public class EntryController {
         }
     }
 
+    @Role.User
     @PutMapping("{id}")
     @ApiResponses({
         @ApiResponse(

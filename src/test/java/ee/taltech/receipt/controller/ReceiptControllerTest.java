@@ -2,6 +2,7 @@ package ee.taltech.receipt.controller;
 
 import ee.taltech.receipt.exception.StorageException;
 import ee.taltech.receipt.model.Receipt;
+import ee.taltech.receipt.security.UserSessionService;
 import ee.taltech.receipt.service.ReceiptService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,17 +27,21 @@ class ReceiptControllerTest {
     private static final MultipartFile FILE = mock(MultipartFile.class);
 
     @Mock
-    private ReceiptService service;
+    private ReceiptService receiptService;
 
     @Mock
     private Logger logger;
+
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private UserSessionService sessionService;
 
     @InjectMocks
     private ReceiptController controller;
 
     @Test
     void createReturnsIdFromService() {
-        when(service.create(FILE)).thenReturn(new Receipt().setId(3L));
+        when(receiptService.create(FILE, 1L)).thenReturn(new Receipt().setId(3L));
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -46,7 +51,8 @@ class ReceiptControllerTest {
 
     @Test
     void createReturnsRetryIfStoringFailed() {
-        when(service.create(FILE)).thenThrow(StorageException.class);
+        when(receiptService.create(FILE, 1L)).thenThrow(StorageException.class);
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -57,7 +63,8 @@ class ReceiptControllerTest {
 
     @Test
     void createReturnsUnsupportedIfWrongFileType() {
-        when(service.create(FILE)).thenThrow(IllegalArgumentException.class);
+        when(receiptService.create(FILE, 1L)).thenThrow(IllegalArgumentException.class);
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -67,7 +74,8 @@ class ReceiptControllerTest {
 
     @Test
     void createReturnsForbiddenIfIllegalState() {
-        when(service.create(FILE)).thenThrow(IllegalStateException.class);
+        when(receiptService.create(FILE, 1L)).thenThrow(IllegalStateException.class);
+        when(sessionService.getUser().getId()).thenReturn(1L);
 
         ResponseEntity<?> response = controller.create(FILE);
 
@@ -79,7 +87,7 @@ class ReceiptControllerTest {
     void getReceiptReturnsReceiptFromServiceIfFound() {
         Receipt receipt = new Receipt();
 
-        when(service.findById(3L)).thenReturn(receipt);
+        when(receiptService.findById(3L)).thenReturn(receipt);
 
         ResponseEntity<?> response = controller.getReceipt(3L);
 
@@ -89,7 +97,7 @@ class ReceiptControllerTest {
 
     @Test
     void getReceiptReturnsNotFoundIfServiceThrowsIllegal() {
-        when(service.findById(3L)).thenThrow(IllegalArgumentException.class);
+        when(receiptService.findById(3L)).thenThrow(IllegalArgumentException.class);
 
         ResponseEntity<?> response = controller.getReceipt(3L);
 
@@ -100,7 +108,7 @@ class ReceiptControllerTest {
     void updateReceiptReturnsReceiptIfSuccess() {
         Receipt receipt = new Receipt();
 
-        when(service.update(receipt, 3L)).thenReturn(receipt);
+        when(receiptService.update(receipt, 3L)).thenReturn(receipt);
 
         ResponseEntity<?> response = controller.updateReceipt(receipt, 3L);
 
@@ -112,7 +120,7 @@ class ReceiptControllerTest {
     void updateReceiptReturnsBadRequestIfError() {
         Receipt receipt = new Receipt();
 
-        when(service.update(receipt, 3L)).thenThrow(IllegalArgumentException.class);
+        when(receiptService.update(receipt, 3L)).thenThrow(IllegalArgumentException.class);
 
         ResponseEntity<?> response = controller.updateReceipt(receipt, 3L);
 
@@ -123,7 +131,7 @@ class ReceiptControllerTest {
     void deleteReceiptReturnsOkIfSuccess() {
         Receipt receipt = new Receipt();
 
-        when(service.findById(3L)).thenReturn(receipt);
+        when(receiptService.findById(3L)).thenReturn(receipt);
 
         ResponseEntity<?> responseOk = controller.delete(3L);
 
@@ -132,10 +140,11 @@ class ReceiptControllerTest {
 
     @Test
     void deleteReceiptReturnsNotFoundIfServiceThrowsIllegal() {
-        when(service.findById(3L)).thenThrow(IllegalArgumentException.class);
+        when(receiptService.findById(3L)).thenThrow(IllegalArgumentException.class);
 
         ResponseEntity<?> response = controller.delete(3L);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
     }
+
 }

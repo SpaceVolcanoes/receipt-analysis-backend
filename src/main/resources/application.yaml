@@ -1,6 +1,8 @@
 spring:
   jackson:
     default-property-inclusion: non_null
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
   jpa:
     properties:
       hibernate:
@@ -18,6 +20,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
+jwt:
+  secret: zpruvvELc0swT4982H1BQ9eaahBQ8g6f
+  durationMin: 30
 management:
   endpoints:
     web:
