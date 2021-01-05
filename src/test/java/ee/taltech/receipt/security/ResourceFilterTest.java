@@ -52,7 +52,7 @@ public class ResourceFilterTest {
     }
 
     @Test
-    void doFilterThrowsErrorIfIdsMismatch() throws IOException, ServletException {
+    void doFilterThrowsErrorIfIdsMismatch() {
         when(user.getId()).thenReturn(2L);
         when(user.getRole()).thenReturn(Role.USER);
         when(request.getMethod()).thenReturn("GET");
