@@ -107,6 +107,7 @@ public class BlogsController {
         @ApiResponse(code = HttpServletResponse.SC_OK, message = "Blog deleted"),
         @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND, message = "No such Blog"),
     })
+    @ApiOperation(value = "Delete Blog by url")
     public ResponseEntity<Object> delete(@PathVariable String url) {
         return ResponseEntity.ok().build();
     }

@@ -45,7 +45,7 @@ public class FileController {
             .collect(Collectors.toList());
     }
 
-    @Role.User
+    @Role.Guest
     @SuppressWarnings("ConstantConditions")
     @GetMapping("{filename}")
     @ApiOperation(
