@@ -31,7 +31,7 @@ public class ResourceFilter implements Filter {
         FilterChain chain
     ) throws IOException, ServletException {
         SessionUser user = userSessionService.getUser();
-        if (user.getRole().equals(Role.ADMIN)) {
+        if (user.getRole().equals(Role.ADMIN) || ((HttpServletRequest) request).getMethod().equals("POST")) {
             chain.doFilter(request, response);
             return;
         }
