@@ -55,6 +55,7 @@ public class ResourceFilterTest {
     void doFilterThrowsErrorIfIdsMismatch() throws IOException, ServletException {
         when(user.getId()).thenReturn(2L);
         when(user.getRole()).thenReturn(Role.USER);
+        when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("/customers/1/receipts");
 
         Throwable thrown = catchThrowable(() -> filter.doFilter(request, response, chain));
@@ -66,6 +67,7 @@ public class ResourceFilterTest {
     @Test
     void doFilterPassesIfIdsMatch() throws IOException, ServletException {
         when(user.getId()).thenReturn(5L);
+        when(request.getMethod()).thenReturn("GET");
         when(user.getRole()).thenReturn(Role.USER);
         when(request.getRequestURI()).thenReturn("/entries/8");
         when(entryService.findById(8L)).thenReturn(
