@@ -49,7 +49,14 @@ public class UserSessionService implements UserDetailsService {
 
     public SessionUser getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication == null ? null : (SessionUser) authentication.getPrincipal();
+        if (authentication == null) {
+            return null;
+        }
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof SessionUser) {
+            return (SessionUser) principal;
+        }
+        return null;
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Customer user) {
