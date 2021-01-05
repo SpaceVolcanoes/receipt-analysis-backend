@@ -44,9 +44,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *
      * Expecting individual endpoints to enforce role restriction.
      * Explicitly bringing out the endpoints which ought to remain free for all if the global default ought to change.
-     *
-     * TODO: figure out HSTS and CSRF config for prod
-     * TODO: figure out a way to easily disable the role enforcements for local env
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -81,7 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         registrationBean.setFilter(new ResourceFilter(userSessionService, entryService, receiptService));
         registrationBean.addUrlPatterns("/customers/*");
         registrationBean.addUrlPatterns("/entries/*");
-        registrationBean.addUrlPatterns("/files/*");
         registrationBean.addUrlPatterns("/receipts/*");
         return registrationBean;
     }
