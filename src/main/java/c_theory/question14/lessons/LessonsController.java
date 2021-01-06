@@ -3,7 +3,6 @@ package c_theory.question14.lessons;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,12 +42,12 @@ public class LessonsController {
         @ApiResponse(code = HttpServletResponse.SC_OK, message = "List of lessons"),
     })
     @ApiOperation(value = "Get a list of Lessons", produces = "application/json")
-    public ResponseEntity<?> getLessons(
+    public List<Lesson> getLessons(
         @RequestParam(defaultValue = "") Long courseId,
         @RequestParam(defaultValue = "") Integer year,
         @RequestParam(defaultValue = "") Boolean orderByVisitors
     ) {
-        return new ResponseEntity<>(List.of(), HttpStatus.OK);
+        return List.of(new Lesson(), new Lesson());
     }
 
     // [X] todo C create a method to query single lesson
@@ -58,8 +57,8 @@ public class LessonsController {
         @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND, message = "No such Lesson"),
     })
     @ApiOperation(value = "Get Lesson by url", produces = "application/json")
-    public ResponseEntity<?> find(@PathVariable Long id) {
-        return new ResponseEntity<>(new Lesson(), HttpStatus.OK);
+    public Lesson find(@PathVariable Long id) {
+        return new Lesson();
     }
 
     // [X] todo D create a method to save a lesson
@@ -68,8 +67,8 @@ public class LessonsController {
         @ApiResponse(code = HttpServletResponse.SC_CREATED, message = "Lesson created successfully")
     })
     @ApiOperation(value = "Create a new Lesson", produces = "application/json")
-    public ResponseEntity<?> create(@RequestBody Lesson lesson) {
-        return new ResponseEntity<>(lesson, HttpStatus.OK);
+    public Lesson create(@RequestBody Lesson lesson) {
+        return lesson;
     }
 
     // [X] todo E create a method to update a lesson
@@ -79,8 +78,8 @@ public class LessonsController {
         @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND, message = "No such Lesson")
     })
     @ApiOperation(value = "Update a Lesson", produces = "application/json")
-    public ResponseEntity<?> update(@RequestBody Lesson lesson, @PathVariable Long id) {
-        return new ResponseEntity<>(lesson, HttpStatus.OK);
+    public Lesson update(@RequestBody Lesson lesson, @PathVariable Long id) {
+        return lesson;
     }
 
     // [X] todo F create a method to delete a lesson
@@ -101,8 +100,8 @@ public class LessonsController {
         @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND, message = "No such Lesson"),
     })
     @ApiOperation(value = "Find all students in a lesson")
-    public ResponseEntity<?> students(@PathVariable Long id) {
-        return new ResponseEntity<>(List.of(), HttpStatus.OK);
+    public List<Students> students(@PathVariable Long id) {
+        return List.of(new Students(), new Students());
     }
 
     // [X] todo H create a method to update lesson's name (and nothing else)
@@ -112,9 +111,9 @@ public class LessonsController {
         @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND, message = "No such lesson"),
     })
     @ApiOperation(value = "Update lesson's name")
-    public ResponseEntity<?> updateName(@PathVariable Long id, @RequestParam(defaultValue = "") String name) {
+    public Lesson updateName(@PathVariable Long id, @RequestParam(defaultValue = "") String name) {
         // Return the lesson, whose name was updated
-        return new ResponseEntity<>(new Lesson(), HttpStatus.OK);
+        return new Lesson();
     }
 
     // [X] todo G modify correct method to support searching lessons by course id while keeping original functionality
