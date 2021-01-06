@@ -12,6 +12,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 
 @Component
@@ -25,6 +27,11 @@ public class ApplicationInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        List<Customer> existing = customerRepository.findAllByEmail("krissu@ttu.ee");
+        if (!existing.isEmpty()) {
+            return;
+        }
+
         Customer krissu = new Customer()
             .setName("Krissu")
             .setEmail("krissu@ttu.ee")
